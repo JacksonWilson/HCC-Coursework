@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Driver {
-    private static final Pattern POSITIVE_NUM_PATTERN = Pattern.compile("(\\+?)\\d+");
+    private static final Pattern POSITIVE_NUM_PATTERN = Pattern.compile("(\\+)?\\d+");
     private static Scanner scanner;
 
     static {

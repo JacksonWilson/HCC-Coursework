@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Driver {
-    private static final Pattern NUM_PATTERN = Pattern.compile("(\\+|-)?\\d+");
     private static Scanner scanner;
     
     static {
@@ -13,13 +12,22 @@ public class Driver {
         String input;
         do {
             input = getInput(prompt);
-            if (NUM_PATTERN.matcher(input).matches()) {
+            if (stringIsNumeric(input)) {
                 try {
                     return Integer.parseInt(input);
                 } catch (NumberFormatException nfe) {}
             }
             System.out.println("Please enter a number.");
         } while (true);
+    }
+    
+    private static boolean stringIsNumeric(String str) {
+        int i = (str.charAt(0) == '+' || str.charAt(0) == '-') ? 1 : 0;
+        for (; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i)))
+                return false;
+        }
+        return true;
     }
 
     private static String getInput(String prompt) {

@@ -3,7 +3,6 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Driver {
-    private static final Pattern POSITIVE_NUM_PATTERN = Pattern.compile("(\\+)?\\d+");
     private static Scanner scanner;
 
     static {
@@ -14,13 +13,22 @@ public class Driver {
         String input;
         do {
             input = getInput(prompt);
-            if (POSITIVE_NUM_PATTERN.matcher(input).matches()) {
+            if (stringIsPositiveNumeric(input)) {
                 try {
                     return Integer.parseInt(input);
                 } catch (NumberFormatException nfe) {}
             }
             System.out.println("Please enter a positive number.");
         } while (true);
+    }
+    
+    private static boolean stringIsPositiveNumeric(String str) {
+        int i = (str.charAt(0) == '+') ? 1 : 0;
+        for (; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i)))
+                return false;
+        }
+        return true;
     }
 
     private static String getInput(String prompt) {

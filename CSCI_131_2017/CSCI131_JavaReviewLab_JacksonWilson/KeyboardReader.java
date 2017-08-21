@@ -1,5 +1,3 @@
-package labs.lab7;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +21,7 @@ public class KeyboardReader extends BufferedReader {
     /**
      * Creates a new KeyboardReader with the given {@link java.io.InputStream}.
      * 
-     * @param inStream An input stream.
+     * @param inStream An input stream such as System.in.
      */
     public KeyboardReader(InputStream inStream) {
         super(new InputStreamReader(inStream));
@@ -51,15 +49,29 @@ public class KeyboardReader extends BufferedReader {
      * @return A String containing the contents of the line, not including any line-
      * termination characters, or null if the end of the stream has been reached.
      */
-    @Override
     public String readLine() throws IOException {
+        return readLine("");
+    }
+
+    /**
+     * Prompts user and reads a line of text. A line is considered to be terminated by
+     * any one of a line feed ('\n'), a carriage return ('\r'), or a carriage return
+     * followed immediately by a linefeed.
+     * 
+     * @return A String containing the contents of the line, not including any line-
+     * termination characters, or null if the end of the stream has been reached.
+     */
+    public String readLine(String prompt) throws IOException {
         String input;
         do {
+            System.out.print(prompt);
             input = super.readLine();
-            if (input != null)
+            if (input == null) {
+                System.out.println("The end of the stream has been reached.");
+                throw new IOException();
+            } else {
                 return input;
-            System.out.println("The end of the stream has been reached.");
-            throw new IOException();
+            }
         } while (true);
     }
 
@@ -125,7 +137,18 @@ public class KeyboardReader extends BufferedReader {
     public int readInt() throws IOException {
         return readInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
-        
+
+    /**
+     * Prompts user and reads a valid int from the input stream. Prompts the user to
+     * enter again if an invalid value is entered.
+     * 
+     * @param prompt A message to prompt the user for input.
+     * @return An int between Integer.MIN_VALUE and Integer.MAX_VALUE, inclusive.
+     */
+    public int readInt(String prompt) throws IOException {
+        return readInt(Integer.MIN_VALUE, Integer.MAX_VALUE, prompt);
+    }
+
     /**
      * Reads a valid int from the input stream. Prompts the user to enter again if an
      * invalid value is entered.
@@ -137,6 +160,17 @@ public class KeyboardReader extends BufferedReader {
     }
 
     /**
+     * Prompts user and reads a valid int from the input stream. Prompts the user to
+     * enter again if an invalid value is entered.
+     * 
+     * @param prompt A message to prompt the user for input.
+     * @return An int between 0 and Integer.MAX_VALUE, inclusive.
+     */
+    public int readPositiveInt(String prompt) throws IOException {
+        return readInt(0, Integer.MAX_VALUE, prompt);
+    }
+
+    /**
      * Reads a valid int from the input stream. Prompts the user to enter again if an
      * invalid value is entered.
      * 
@@ -145,9 +179,24 @@ public class KeyboardReader extends BufferedReader {
      * @return An int between minValue and maxValue, inclusive.
      */
     public int readInt(int minValue, int maxValue) throws IOException {
+        return readInt(minValue, maxValue, "");
+    }
+
+    /**
+     * Prompts user and reads a valid int from the input stream. Prompts the user to
+     * enter again if an invalid value is entered.
+     * 
+     * @param minValue The minimum acceptable value, inclusive.
+     * @param maxValue The maximum acceptable value, inclusive.
+     * @param prompt A message to prompt the user for input.
+     * @return An int between minValue and maxValue, inclusive.
+     */
+    public int readInt(int minValue, int maxValue, String prompt) throws IOException {
         String input;
         int number;
         do {
+            if (!prompt.isEmpty())
+                System.out.print(prompt);
             try {
                 input = readLine();
                 if (!input.isEmpty() && stringIsNumeric(input)) {
@@ -206,8 +255,21 @@ public class KeyboardReader extends BufferedReader {
      * @return A double.
      */
     public double readDouble() throws IOException {
+        return readDouble("");
+    }
+
+    /**
+     * Reads a valid double from the input stream. Prompts the user to enter again if an
+     * invalid value is entered.
+     * 
+     * @param prompt A message to prompt the user for input.
+     * @return A double.
+     */
+    public double readDouble(String prompt) throws IOException {
         String input;
         do {
+            if (!prompt.isEmpty())
+                System.out.print(prompt);
             try {
                 input = readLine();
                 if (!input.isEmpty() && stringIsFloatingNumeric(input))
@@ -237,6 +299,12 @@ public class KeyboardReader extends BufferedReader {
         } while (true);
     }
     
+    /**
+     * Checks if every character (excluding a leading sign) is a digit.
+     * 
+     * @param str The string to be checked.
+     * @return Whether the string is numeric or not.
+     */
     private boolean stringIsNumeric(String str) {
         int i = (str.charAt(0) == '+' || str.charAt(0) == '-') ? 1 : 0;
         for (; i < str.length(); i++) {
@@ -246,6 +314,12 @@ public class KeyboardReader extends BufferedReader {
         return true;
     }
     
+    /**
+     * Checks if every character (excluding a leading sign and floating point) is a digit.
+     * 
+     * @param str The string to be checked.
+     * @return Whether the string is numeric or not.
+     */
     private boolean stringIsFloatingNumeric(String str) {
         int indexOfFloat = str.indexOf('.');
         if (indexOfFloat >= 0) 

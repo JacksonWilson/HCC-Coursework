@@ -1,74 +1,45 @@
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
+/**
+ * Creates an inventory of books by prompting the user for information on each book
+ * and displaying the complete inventory at the end.
+ * 
+ * @author Jackson Wilson
+ */
 public class Driver {
-    private static Scanner scanner;
-
-    static {
-        scanner = new Scanner(System.in);
-    }
-
-    private static int getPositiveIntegerFromInput(String prompt) {
-        String input;
-        do {
-            input = getInput(prompt);
-            if (stringIsPositiveNumeric(input)) {
-                try {
-                    return Integer.parseInt(input);
-                } catch (NumberFormatException nfe) {}
-            }
-            System.out.println("Please enter a positive number.");
-        } while (true);
-    }
-    
-    private static boolean stringIsPositiveNumeric(String str) {
-        int i = (str.charAt(0) == '+') ? 1 : 0;
-        for (; i < str.length(); i++) {
-            if (!Character.isDigit(str.charAt(i)))
-                return false;
-        }
-        return true;
-    }
-
-    private static String getInput(String prompt) {
-        String input;
-        do {
-            System.out.print(prompt);
-            if (scanner.hasNextLine()) {
-                input = scanner.nextLine().trim();
-                if (input != null && !input.isEmpty()) {
-                    return input;
-                }
-                System.out.println("Please enter something.");
-            }
-        } while (true);
-    }
 
     public static void main(String[] args) {
-        int numOfBooks = getPositiveIntegerFromInput("Enter the number of books: ");
-        System.out.println();
-
-        ArrayList<Book> books = new ArrayList<Book>();
-
-        for (int i = 1; i <= numOfBooks; i++) {
-            String title = getInput("Enter title for Book " + i + ": ");
-            String author = getInput("Enter author for Book " + i + ": ");
-            int numOfPages = getPositiveIntegerFromInput(
-                "Enter number of pages for Book " + i + ": ");
-
-            books.add(new Book(title, author, numOfPages));
+        try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
+            // Get the number of books to be entered into inventory.
+            int numOfBooks = keyReader.readPositiveInt("Enter the number of books: ");
             System.out.println();
-        }
+    
+            ArrayList<Book> books = new ArrayList<Book>();
+            
+            // Create book objects based on user input and add to array of books.
+            for (int i = 1; i <= numOfBooks; i++) {
+                String title = keyReader.readLine("Enter title for Book " + i + ": ");
+                String author = keyReader.readLine("Enter author for Book " + i + ": ");
+                int numOfPages = keyReader.readPositiveInt(
+                    "Enter number of pages for Book " + i + ": ");
+    
+                books.add(new Book(title, author, numOfPages));
+                System.out.println();
+            }
+            
+            // Print every book and keep track of total number of pages.
+            System.out.println("Book Inventory\n--------------");
+            int totalNumOfPages = 0;
+            for (Book book : books) {
+                totalNumOfPages += book.getNumOfPages();
+                System.out.println(book);
+            }
 
-        System.out.println("Book Inventory\n--------------");
-        int totalNumOfPages = 0;
-        for (Book book : books) {
-            totalNumOfPages += book.getNumOfPages();
-            System.out.println(book);
+            // Print total number of pages in every book in list.
+            System.out.println("\nTotal pages in all books: " + totalNumOfPages);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
-        System.out.println("\nTotal pages in all books: " + totalNumOfPages);
-
-        scanner.close();
     }
 }

@@ -26,6 +26,12 @@ public class ParseInt {
     }
 
     public static void main(String[] args) {
+        /* Results
+            true Exception Trial: 587,372,029 nanoseconds.
+            true Regex Trial: 418,351,356 nanoseconds.
+            true CompiledRegex Trial: 71,895,530 nanoseconds.
+            true CustomCharacterCheck Trial: 18,645,825 nanoseconds.
+        */
         exceptionTrial();
         regexTrial();
         compiledRegexTrial();

@@ -11,7 +11,6 @@ import utils.KeyboardReader;
  * @author Jackson Wilson
  */
 public class Driver {
-
     public static void main(String[] args) {
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
             double boreLength = keyReader.readDouble("Cylinder bore length: "); //getIntegerFromInput("Cylinder bore length: ");

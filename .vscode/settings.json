@@ -1,5 +1,8 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
     "terminal.integrated.shell.windows": "C:\\Windows\\Sysnative\\WindowsPowerShell\\v1.0\\powershell.exe",
-    "java.referencesCodeLens.enabled": false
+    "java.referencesCodeLens.enabled": false,
+    "editor.rulers": [
+        90
+    ]
 }

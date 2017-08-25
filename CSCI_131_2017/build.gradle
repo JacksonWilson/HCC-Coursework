@@ -21,11 +21,11 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = 'CSCI131_JavaBasicsLab_Wilson'
-def entry = 'labs.lab1.Driver'
+def name = "CSCI131_JavaBasicsLab_Wilson"
+def entry = "labs.lab1.Driver"
 def includes = [
-    'labs/lab1/*',
-    'utils/KeyboardReader.*'
+    "labs/lab1/*",
+    "utils/KeyboardReader.*"
 ]
 
 task deleteExisting(type: Delete) {
@@ -35,21 +35,21 @@ task deleteExisting(type: Delete) {
 task specificJar(type: Jar) {
     baseName = name
     destinationDir = file("$rootDir/build/libs/$name")
-    manifest.attributes 'Main-Class': entry
+    manifest.attributes "Main-Class": entry
 
     from sourceSets.main.output
-    (includes).each { i -> include "$i" }
+    (includes).each { i -> include i }
 }
 
 task copyBinFiles(type: Copy) {
-    from 'bin'
-    (includes).each { i -> include "$i" }
+    from "bin"
+    (includes).each { i -> include i }
     into "build/libs/$name/bin"
 }
 
 task copySrcFiles(type: Copy) {
-    from 'src/main/java'
-    (includes).each { i -> include "$i" }
+    from "src/main/java"
+    (includes).each { i -> include i }
     into "build/libs/$name/src"
 }
 
@@ -59,7 +59,7 @@ task buildSpecific {
     dependsOn copyBinFiles
     dependsOn copySrcFiles
 
-    specificJar.mustRunAfter 'deleteExisting'
-    copyBinFiles.mustRunAfter 'specificJar'
-    copySrcFiles.mustRunAfter 'copyBinFiles'
+    specificJar.mustRunAfter deleteExisting
+    copyBinFiles.mustRunAfter specificJar
+    copySrcFiles.mustRunAfter copyBinFiles
 }

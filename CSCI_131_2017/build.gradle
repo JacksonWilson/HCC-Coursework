@@ -9,7 +9,7 @@
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 compileJava.options.fork = true
-compileJava.options.forkOptions.executable = 'C:/Program Files/Java/jdk1.8.0_131/bin/javac.exe'
+//compileJava.options.forkOptions.executable = 'C:/Program Files/Java/jdk1.8.0_131/bin/javac.exe'
 
 apply plugin: 'eclipse'
 

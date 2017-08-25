@@ -54,12 +54,12 @@ task copySrcFiles(type: Copy) {
 }
 
 task buildSpecific {
-    dependsOn 'deleteExisting'
-    dependsOn 'specificJar'
-    dependsOn 'copyBinFiles'
-    dependsOn 'copySrcFiles'
+    dependsOn deleteExisting
+    dependsOn specificJar
+    dependsOn copyBinFiles
+    dependsOn copySrcFiles
 
-    tasks.findByName('specificJar').mustRunAfter 'deleteExisting'
-    tasks.findByName('copyBinFiles').mustRunAfter 'specificJar'
-    tasks.findByName('copySrcFiles').mustRunAfter 'copyBinFiles'
+    specificJar.mustRunAfter 'deleteExisting'
+    copyBinFiles.mustRunAfter 'specificJar'
+    copySrcFiles.mustRunAfter 'copyBinFiles'
 }

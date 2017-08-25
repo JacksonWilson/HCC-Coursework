@@ -3,7 +3,7 @@
 -target
 1.8
 -d
-"C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\build\\classes\\java\\main"
+I:\\HCC-Coursework\\CSCI_131_2017\\build\\classes\\java\\main
 -g
 -sourcepath
 ""
@@ -20,3 +20,4 @@ C:\\Users\\jacks\\.gradle\\caches\\modules-2\\files-2.1\\com.google.guava\\guava
 "C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab3\\Driver.java"
 "C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab3\\Relation.java"
 "C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\utils\\KeyboardReader.java"
+

@@ -25,19 +25,27 @@ repositories {
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
-    compile 'com.google.guava:guava:21.0'
+    compile 'com.google.guava:guava:23.0'
 
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 }
 
 // Define the main class for the application
-mainClassName = 'labs.lab3.Driver'
+mainClassName = 'labs.lab1.Driver'
 
 jar {
-  manifest {
-    attributes(
-      'Main-Class': 'labs.lab3.Driver'
-    )
-  }
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+task specificJar(type: Jar) {
+    baseName = 'CSCI131_JavaBasicsLab_Wilson'
+    manifest {
+        attributes 'Main-Class': 'labs.lab1.Driver'
+    }
+    from sourceSets.main.output
+    include 'labs/lab1/*'
+    include 'utils/KeyboardReader.class'
 }

@@ -49,7 +49,7 @@ public class Relation {
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
             int numElements;
             char relatedElement;
-            for (Character element : ELEMENTS) {
+            for (char element : ELEMENTS) {
                 numElements = keyReader.readInt(0, cardinality,
                     "Number of elements related to \'" + element + "\': ");
                 for (int i = 0; i < numElements; i++) {
@@ -208,10 +208,11 @@ public class Relation {
      * @throws IllegalArgumentException If otherRelation or product does not have the same cardinality as this relation.
      */
     private void booleanProduct(int[][] otherRelation, int[][] product) throws IllegalArgumentException {
-        if (otherRelation.length != relation[0].length)
+        if (otherRelation.length != relation.length && otherRelation[0].length != relation[0].length)
             throw new IllegalArgumentException("Expected otherRelation to have the same cardinality as relation: " + cardinality);
-        if (product.length != relation.length || product[0].length != otherRelation[0].length)
-            throw new IllegalArgumentException("Expected product to be: " + relation.length + "x" + otherRelation[0].length);
+        if (product.length != relation.length && product[0].length != relation[0].length)
+            throw new IllegalArgumentException("Expected product to have the same cardinality as relation: " + cardinality);
+            
         for (int r = 0; r < relation.length; r++) {
             for (int c = 0; c < relation[r].length; c++) {
                 for (int i = 0; i < relation.length; i++) {

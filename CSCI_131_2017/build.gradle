@@ -1,7 +1,5 @@
 
 apply plugin: 'java'
-compileJava.options.fork = true
-//compileJava.options.forkOptions.executable = 'C:/Program Files/Java/jdk1.8.0_131/bin/javac.exe'
 
 apply plugin: 'eclipse'
 apply plugin: 'application'
@@ -14,6 +12,11 @@ dependencies {
     compile 'com.google.guava:guava:23.0'
     testCompile 'junit:junit:4.12'
 }
+
+// compileJava {
+//     options.fork = true
+//     options.forkOptions.executable = "C:/Program Files (x86)/Java/jdk1.8.0_51/bin/javac"
+// }
 
 mainClassName = 'labs.lab1.Driver'
 

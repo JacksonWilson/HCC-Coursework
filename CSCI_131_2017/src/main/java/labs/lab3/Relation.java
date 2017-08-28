@@ -49,7 +49,7 @@ public class Relation {
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
             int numElements;
             char relatedElement;
-            for (Character element : ELEMENTS) {
+            for (char element : ELEMENTS) {
                 numElements = keyReader.readInt(0, cardinality,
                     "Number of elements related to \'" + element + "\': ");
                 for (int i = 0; i < numElements; i++) {

@@ -27,6 +27,9 @@ def includes = [
     "assignments/a1/*",
     "utils/KeyboardReader.*"
 ]
+def excludes = [
+    "**/*Test.*"
+]
 
 task deleteExisting(type: Delete) {
     delete "$rootDir/build/libs/$name"
@@ -39,17 +42,20 @@ task specificJar(type: Jar) {
 
     from sourceSets.main.output
     (includes).each { i -> include i }
+    (excludes).each { e -> exclude e }
 }
 
 task copyBinFiles(type: Copy) {
     from "bin"
     (includes).each { i -> include i }
+    (excludes).each { e -> exclude e }
     into "build/libs/$name/bin"
 }
 
 task copySrcFiles(type: Copy) {
     from "src/main/java"
     (includes).each { i -> include i }
+    (excludes).each { e -> exclude e }
     into "build/libs/$name/src"
 }
 

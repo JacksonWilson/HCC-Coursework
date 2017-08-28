@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class NumberBases {
 	public static void main(String[] args) {
-		Scanner s = new Scanner (System.in);
+        Scanner s = new Scanner (System.in);
         System.out.println("This program will display the first 100 decimal numbers");
         System.out.println("and will show their corresponding binary and octal");
         System.out.println("equivalent values.\n");
@@ -28,8 +28,8 @@ public class NumberBases {
         for (int i = 1; i < 101; i++) {
             System.out.print(Integer.toBinaryString(i) + "\t\t");
             System.out.print(Integer.toOctalString(i) + "\t\t");
-            System.out.print(Integer.toHexString(i) + "\t\t");
             System.out.print(i + "\t\t");
+            System.out.print(Integer.toHexString(i) + "\t\t");
             System.out.println();
 
             if (((i%10) == 0) && (i != 100)) {

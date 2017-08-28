@@ -1,6 +1,5 @@
 package labs.lab1;
 
-
 /**
  * Defines a Vehicular Component with an empty constructor and one abstract method.
  * 

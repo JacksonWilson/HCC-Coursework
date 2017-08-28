@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
  * <p>Copyright Jackson Wilson (c) 2017</p>
  * 
  * @author Jackson Wilson
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class KeyboardReader extends BufferedReader {
 
@@ -50,6 +50,7 @@ public class KeyboardReader extends BufferedReader {
      * 
      * @return A String containing the contents of the line, not including any line-
      * termination characters, or null if the end of the stream has been reached.
+     * @throws IOException If an I/O error occurs.
      */
     public String readLine() throws IOException {
         return readLine("");
@@ -60,8 +61,10 @@ public class KeyboardReader extends BufferedReader {
      * any one of a line feed ('\n'), a carriage return ('\r'), or a carriage return
      * followed immediately by a linefeed.
      * 
+     * @param prompt A message to prompt the user for input.
      * @return A String containing the contents of the line, not including any line-
      * termination characters, or null if the end of the stream has been reached.
+     * @throws IOException If an I/O error occurs.
      */
     public String readLine(String prompt) throws IOException {
         String input;
@@ -76,33 +79,75 @@ public class KeyboardReader extends BufferedReader {
             }
         } while (true);
     }
-
+    
     /**
      * Reads one character. Prompts the user to enter again if zero or more than one
      * character is entered.
      * 
      * @return A character.
+     * @throws IOException If an I/O error occurs.
      */
     public char readChar() throws IOException {
-        return readChar("");
+        return readChar("", null);
+    }
+    
+    /**
+     * Prompts user and reads one character. Prompts the user to enter again if zero or
+     * more than one character is entered.
+     * 
+     * @param prompt A message to prompt the user for input.
+     * @return A character.
+     * @throws IOException If an I/O error occurs.
+     */
+    public char readChar(String prompt) throws IOException {
+        return readChar(prompt, null);
+    }
+        
+    /**
+     * Reads one character. Prompts the user to enter again if zero or more than one
+     * character is entered.
+     * 
+     * @param possibleCharacters An array of valid characters.
+     * @return A character.
+     * @throws IOException If an I/O error occurs.
+     */
+    public char readChar(char[] possibleCharacters) throws IOException {
+        return readChar("", possibleCharacters);
     }
 
     /**
      * Prompts user and reads one character. Prompts the user to enter again if zero or
      * more than one character is entered.
      * 
+     * @param prompt A message to prompt the user for input.
+     * @param possibleCharacters An array of valid characters.
      * @return A character.
+     * @throws IOException If an I/O error occurs.
      */
-    public char readChar(String prompt) throws IOException {
+    public char readChar(String prompt, char[] possibleCharacters) throws IOException {
         String input;
         do {
             System.out.print(prompt);
             input = readLine();
 
-            if (input.isEmpty() || input.length() > 1)
+            if (!input.isEmpty() && input.length() == 1) {
+                if (possibleCharacters != null) {
+                    for (char ch : possibleCharacters) {
+                        if (input.charAt(0) == ch)
+                            return ch;
+                    }
+                } else {
+                    return input.charAt(0);
+                }
+            }
+            if (possibleCharacters == null) {
                 System.out.println("Please enter a character.");
-            else
-                return input.charAt(0);
+            } else {
+                System.out.print("Please enter a valid character: { ");
+                for (char ch : possibleCharacters)
+                    System.out.print(ch + " ");
+                System.out.println("}");
+            }
         } while (true);
     }
 
@@ -111,6 +156,7 @@ public class KeyboardReader extends BufferedReader {
      * the user to enter again if neither is entered.
      * 
      * @return A boolean.
+     * @throws IOException If an I/O error occurs.
      */
     public boolean readBoolean() throws IOException {
         String input;
@@ -127,6 +173,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return A long.
+     * @throws IOException If an I/O error occurs.
      */
     public long readLong() throws IOException {
         String input;
@@ -146,6 +193,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return An int between Integer.MIN_VALUE and Integer.MAX_VALUE, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readInt() throws IOException {
         return readInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -157,6 +205,7 @@ public class KeyboardReader extends BufferedReader {
      * 
      * @param prompt A message to prompt the user for input.
      * @return An int between Integer.MIN_VALUE and Integer.MAX_VALUE, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readInt(String prompt) throws IOException {
         return readInt(Integer.MIN_VALUE, Integer.MAX_VALUE, prompt);
@@ -167,6 +216,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return An int between 0 and Integer.MAX_VALUE, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readPositiveInt() throws IOException {
         return readInt(0, Integer.MAX_VALUE);
@@ -178,6 +228,7 @@ public class KeyboardReader extends BufferedReader {
      * 
      * @param prompt A message to prompt the user for input.
      * @return An int between 0 and Integer.MAX_VALUE, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readPositiveInt(String prompt) throws IOException {
         return readInt(0, Integer.MAX_VALUE, prompt);
@@ -190,6 +241,7 @@ public class KeyboardReader extends BufferedReader {
      * @param minValue The minimum acceptable value, inclusive.
      * @param maxValue The maximum acceptable value, inclusive.
      * @return An int between minValue and maxValue, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readInt(int minValue, int maxValue) throws IOException {
         return readInt(minValue, maxValue, "");
@@ -203,6 +255,7 @@ public class KeyboardReader extends BufferedReader {
      * @param maxValue The maximum acceptable value, inclusive.
      * @param prompt A message to prompt the user for input.
      * @return An int between minValue and maxValue, inclusive.
+     * @throws IOException If an I/O error occurs.
      */
     public int readInt(int minValue, int maxValue, String prompt) throws IOException {
         String input;
@@ -228,6 +281,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return A short.
+     * @throws IOException If an I/O error occurs.
      */
     public short readShort() throws IOException {
         String input;
@@ -247,6 +301,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return A byte.
+     * @throws IOException If an I/O error occurs.
      */
     public byte readByte() throws IOException {
         String input;
@@ -266,6 +321,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return A double.
+     * @throws IOException If an I/O error occurs.
      */
     public double readDouble() throws IOException {
         return readDouble("");
@@ -277,6 +333,7 @@ public class KeyboardReader extends BufferedReader {
      * 
      * @param prompt A message to prompt the user for input.
      * @return A double.
+     * @throws IOException If an I/O error occurs.
      */
     public double readDouble(String prompt) throws IOException {
         String input;
@@ -298,6 +355,7 @@ public class KeyboardReader extends BufferedReader {
      * invalid value is entered.
      * 
      * @return A float.
+     * @throws IOException If an I/O error occurs.
      */
     public float readFloat() throws IOException {
         String input;

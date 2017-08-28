@@ -1,14 +1,16 @@
 package labs.lab1;
 
-
 /**
  * Defines an Engine, a type of Vehicular Component.
  * 
  * @author Jackson Wilson
  */
 public class Engine extends VehicularComponent {
-    private static final double c = 0.7854; // pi / 4;
-    private double E;
+    private static final double c;
+    static {
+        c = 0.7854; // pi / 4;
+    }
+
     private double b;
     private double S;
     private int N;
@@ -24,14 +26,19 @@ public class Engine extends VehicularComponent {
         this.b = b;
         this.S = S;
         this.N = N;
-        this.E = c * b * b * S * N;
     }
     
+    /**
+     * Calculates the engine displacement using the engine displacement formula:
+     * <p>pi / 4 * Bore^2 * Stroke * Number of Cylinders.
+     * 
+     * @return Engine Displacement
+     */
     public double getEngineDisplacement() {
-        return E;
+        return c * b * b * S * N;
     }
     
-    public double getCylinderBoreLength() {
+    public double getCylinderBoreDiameter() {
         return b;
     }
     
@@ -50,7 +57,17 @@ public class Engine extends VehicularComponent {
     
     @Override
     public String toString() {
-        return getComponentDetails() + " has an engine displacement of "
-            + getEngineDisplacement() + " cubic units.";
+        return "Number of cylinders: " + N + " Bore diameter: " + b + " Stroke length: " + S;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (o == this)
+            return true;
+        if (o instanceof Engine)
+            return this.N == ((Engine)o).N;
+        return false;
     }
 }

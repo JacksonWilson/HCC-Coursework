@@ -24,6 +24,8 @@ public class Relation {
 
     /**
      * Instantiates relation matrix with 0's and optionally populates the relation.
+     * 
+     * @param populate Whether to populate the relation with user input or not.
      */
     public Relation(boolean populate) {
         this();
@@ -50,13 +52,10 @@ public class Relation {
             int numElements;
             char relatedElement;
             for (char element : ELEMENTS) {
-                numElements = keyReader.readInt(0, cardinality,
-                    "Number of elements related to \'" + element + "\': ");
+                numElements = keyReader.readInt(0, cardinality, "Number of elements related to \'" + element + "\': ");
                 for (int i = 0; i < numElements; i++) {
-                    relatedElement = keyReader.readChar("Element \'"
-                        + element + "\' is related to: ", ELEMENTS);
-                    relation[convertLetterToNumber(element)]
-                        [convertLetterToNumber(relatedElement)] = 1;
+                    relatedElement = keyReader.readChar("Element \'" + element + "\' is related to: ", ELEMENTS);
+                    relation[convertLetterToNumber(element)][convertLetterToNumber(relatedElement)] = 1;
                 }
                 System.out.println();
             }
@@ -154,10 +153,8 @@ public class Relation {
     public boolean isAntiSymmetric() {
         for (int r = 0, c = 1; r < relation.length - 1; r++) {
             for (; c < relation[r].length; c++) {
-                if (relation[r][c] == 1 && relation[c][r] == 1) {
-                    System.out.println(relation[r][c] + " " + relation[c][r]);
+                if (relation[r][c] == 1 && relation[c][r] == 1)
                     return false;
-                }
             }
             c = r + 1;
         }
@@ -176,9 +173,9 @@ public class Relation {
         int[][] product = new int[cardinality][cardinality];
         booleanProduct(copiedRelation, product);
 
-        for (int r = 0; r < relation.length; r++) {
-            for (int c = 0; c < relation[r].length; c++) {
-                if (relation[r][c] != product[r][c])
+        for (int r = 0; r < product.length; r++) {
+            for (int c = 0; c < product[r].length; c++) {
+                if (product[r][c] == 1 && relation[r][c] != 1)
                     return false;
             }
         }
@@ -189,12 +186,8 @@ public class Relation {
      * Copies this relation into another matrix.
      * 
      * @param dstRelation Destination for copied relation matrix.
-     * @throws IllegalArgumentException If dstRelation is not the same cardinality as this relation.
      */
-    private void copyRelation(int[][] dstRelation) throws IllegalArgumentException {
-        if (dstRelation.length != relation.length || dstRelation[0].length != relation[0].length)
-            throw new IllegalArgumentException("Expected dstRelation to have the same cardinality as relation: " + cardinality);
-        
+    private void copyRelation(int[][] dstRelation) {
         for (int r = 0; r < relation.length; r++) {
             for (int c = 0; c < relation[r].length; c++)
                 dstRelation[r][c] = relation[r][c];
@@ -202,17 +195,12 @@ public class Relation {
     }
 
     /**
+     * Calculates and stores the boolean product of this relation with another into product.
      * 
      * @param otherRelation The other relation matrix.
      * @param product The out matrix for the product.
-     * @throws IllegalArgumentException If otherRelation or product does not have the same cardinality as this relation.
      */
-    private void booleanProduct(int[][] otherRelation, int[][] product) throws IllegalArgumentException {
-        if (otherRelation.length != relation.length && otherRelation[0].length != relation[0].length)
-            throw new IllegalArgumentException("Expected otherRelation to have the same cardinality as relation: " + cardinality);
-        if (product.length != relation.length && product[0].length != relation[0].length)
-            throw new IllegalArgumentException("Expected product to have the same cardinality as relation: " + cardinality);
-            
+    private void booleanProduct(int[][] otherRelation, int[][] product) {
         for (int r = 0; r < relation.length; r++) {
             for (int c = 0; c < relation[r].length; c++) {
                 for (int i = 0; i < relation.length; i++) {

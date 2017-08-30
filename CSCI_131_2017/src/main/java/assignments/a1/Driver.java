@@ -1,7 +1,7 @@
 package assignments.a1;
 
 /**
- * Creates a new relation with user input and displays matrix and properties to output.
+ * Creates a new relation with user input and displays matrix, ordered pairs, and properties to output.
  * 
  * @author Jackson Wilson
  */

@@ -1,0 +1,9 @@
+-d 'I:\\HCC-Coursework\\CSCI_131_2017\\build\\libs\\CSCI131_JavadocLab_Wilson\\docs'
+-doctitle 'CSCI_131_2017 API'
+-quiet 
+-windowtitle 'CSCI_131_2017 API'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Driver.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Point.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Segment.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\TestDriver.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\utils\\KeyboardReader.java'

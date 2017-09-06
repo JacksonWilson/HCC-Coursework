@@ -1,6 +1,5 @@
 
 apply plugin: 'java'
-
 apply plugin: 'eclipse'
 apply plugin: 'application'
 
@@ -24,10 +23,10 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = "CSCI131_A1_Wilson"
-def entry = "assignments.a1.Driver"
+def name = "CSCI131_JavadocLab_Wilson"
+def entry = "labs.lab5.Driver"
 def includes = [
-    "assignments/a1/*",
+    "labs/lab5/*",
     "utils/KeyboardReader.*"
 ]
 def excludes = [
@@ -62,13 +61,23 @@ task copySrcFiles(type: Copy) {
     into "build/libs/$name/src"
 }
 
+task generateJavadocFiles(type: Javadoc) {
+    destinationDir = file("$rootDir/build/libs/$name/docs")
+    source = sourceSets.main.allJava
+    (includes).each { i -> include i }
+    (excludes).each { e -> exclude e }
+    failOnError false
+}
+
 task buildSpecific {
     dependsOn deleteExisting
     dependsOn specificJar
     dependsOn copyBinFiles
     dependsOn copySrcFiles
+    dependsOn generateJavadocFiles
 
     specificJar.mustRunAfter deleteExisting
     copyBinFiles.mustRunAfter specificJar
     copySrcFiles.mustRunAfter copyBinFiles
+    generateJavadocFiles.mustRunAfter copySrcFiles
 }

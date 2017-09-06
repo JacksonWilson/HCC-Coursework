@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="labs.lab5.Lab5Test" tests="4" skipped="0" failures="0" errors="0" timestamp="2017-09-06T19:52:25" hostname="WDC3003-005" time="0.006">
+  <properties/>
+  <testcase name="testSegment_NotWithinTollerance" classname="labs.lab5.Lab5Test" time="0.005"/>
+  <testcase name="testSegment_DirectlyOn" classname="labs.lab5.Lab5Test" time="0.0"/>
+  <testcase name="testSegment_WithinTollerance" classname="labs.lab5.Lab5Test" time="0.0"/>
+  <testcase name="testSegment_OnButOutsideDomain" classname="labs.lab5.Lab5Test" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

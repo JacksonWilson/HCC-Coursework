@@ -4,5 +4,8 @@
     "java.referencesCodeLens.enabled": false,
     "editor.rulers": [
         90
+    ],
+    "java.externalDependencies": [
+        "junit:junit:4.12"
     ]
 }

@@ -22,14 +22,8 @@ public class Driver {
             
             Segment segment = new Segment(p1, p2);
             System.out.println("\nThe point does" + (segment.doesCollide(p3) ? " " : " not ") + "collide with the segment.");
-
-            // Prompt to run tests.
-            char input = keyReader.readChar("\nRun tests? (Y/N): ", new char[]{'Y', 'y', 'N', 'n'});
-            if (input == 'Y' || input == 'y')
-                TestDriver.main(null);
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
     }
 }

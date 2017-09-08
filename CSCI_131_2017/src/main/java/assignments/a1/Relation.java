@@ -126,12 +126,11 @@ public class Relation {
      * @return Whether the relation matrix is symmetric or not.
      */
     public boolean isSymmetric() {
-        for (int r = 0, c = 1; r < relation.length - 1; r++) {
-            for (; c < relation[r].length; c++) {
+        for (int r = 0; r < relation.length - 1; r++) {
+            for (int c = r + 1; c < relation[r].length; c++) {
                 if (relation[r][c] != relation[c][r])
                     return false;
             }
-            c = r + 1;
         }
         return true;
     }
@@ -151,12 +150,11 @@ public class Relation {
      * @return Whether the relation matrix is anti-symmetric or not.
      */
     public boolean isAntiSymmetric() {
-        for (int r = 0, c = 1; r < relation.length - 1; r++) {
-            for (; c < relation[r].length; c++) {
+        for (int r = 0; r < relation.length - 1; r++) {
+            for (int c = r + 1; c < relation[r].length; c++) {
                 if (relation[r][c] == 1 && relation[c][r] == 1)
                     return false;
             }
-            c = r + 1;
         }
         return true;
     }
@@ -239,3 +237,32 @@ public class Relation {
         return ELEMENTS[index];
     }
 }
+
+/* // This should work but because I close System.in in populateRelation(), I cannot reference it again here.
+    public void printPowerRelation() {
+        try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
+            int n = keyReader.readPositiveInt("Enter a path length: ");
+            
+            System.out.println("Matrix of the relation R(" + n + ")");
+            System.out.println("---------------------------");
+            for (int[] row : getPowerRelation(n)) {
+                for (int element : row) {
+                    System.out.print(" " + element);
+                }
+                System.out.println();
+            }
+            System.out.println();
+
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    private int[][] getPowerRelation(int n) {
+        if (n == 1)
+            return relation;
+        int[][] ret = new int[cardinality][cardinality];
+        booleanProduct(getPowerRelation(n - 1), ret);
+        return ret;
+    }
+*/

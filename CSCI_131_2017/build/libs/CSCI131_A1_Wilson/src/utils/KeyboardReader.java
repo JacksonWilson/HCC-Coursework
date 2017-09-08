@@ -152,7 +152,7 @@ public class KeyboardReader extends BufferedReader {
     }
 
     /**
-     * Reads either &quot;TRUE&quot; or &quot;FALSE&quot from the input stream;. Prompts
+     * Reads either &quot;TRUE&quot; or &quot;FALSE&quot; from the input stream;. Prompts
      * the user to enter again if neither is entered.
      * 
      * @return A boolean.

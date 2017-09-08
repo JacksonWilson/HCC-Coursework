@@ -23,10 +23,10 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = "CSCI131_JavadocLab_Wilson"
-def entry = "labs.lab5.Driver"
+def name = "CSCI131_A1_Wilson"
+def entry = "assignments.a1.Driver"
 def includes = [
-    "labs/lab5/*",
+    "assignments/a1/*",
     "utils/KeyboardReader.*"
 ]
 def excludes = [
@@ -62,7 +62,7 @@ task copySrcFiles(type: Copy) {
 }
 
 task generateJavadocFiles(type: Javadoc) {
-    destinationDir = file("$rootDir/build/libs/$name/docs")
+    destinationDir = file("$rootDir/build/libs/$name/doc")
     source = sourceSets.main.allJava
     (includes).each { i -> include i }
     (excludes).each { e -> exclude e }

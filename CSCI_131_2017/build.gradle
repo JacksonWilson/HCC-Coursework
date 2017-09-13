@@ -23,10 +23,10 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = "CSCI131_A1_Wilson"
-def entry = "assignments.a1.Driver"
+def name = "CSCI131_A2_Wilson"
+def entry = "assignments.a2.Driver"
 def includes = [
-    "assignments/a1/*",
+    "assignments/a2/*",
     "utils/KeyboardReader.*"
 ]
 def excludes = [

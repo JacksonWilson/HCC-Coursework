@@ -14,6 +14,14 @@ public class QuadraticEquation {
     }
 
     public ArrayList<Double> calculateRoots() {
-        return null;
+        double radicand = Math.pow(linearCoefficient, 2) - 4 * quadraticCoefficient * constant;
+        ArrayList<Double> roots = new ArrayList<>();
+        if (radicand == 0)
+            roots.add((-linearCoefficient)/(2 * quadraticCoefficient));
+        if (radicand > 0) {
+            roots.add((-linearCoefficient + Math.sqrt(radicand))/(2 * quadraticCoefficient));
+            roots.add((-linearCoefficient - Math.sqrt(radicand))/(2 * quadraticCoefficient));
+        }
+        return roots;
     }
 }

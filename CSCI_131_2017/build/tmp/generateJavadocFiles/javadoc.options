@@ -1,6 +1,10 @@
--d 'I:\\HCC-Coursework\\CSCI_131_2017\\build\\libs\\CSCI131_Recursion_Sequences_Wilson\\doc'
+-d 'I:\\HCC-Coursework\\CSCI_131_2017\\build\\libs\\CSCI131_A2_Wilson\\doc'
 -doctitle 'CSCI_131_2017 API'
 -quiet 
 -windowtitle 'CSCI_131_2017 API'
-'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\labs\\lab6\\Driver.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\assignments\\a2\\Driver.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\assignments\\a2\\LHD2Recurrence.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\assignments\\a2\\Point.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\assignments\\a2\\QuadraticEquation.java'
+'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\assignments\\a2\\SystemOfTwo.java'
 'I:\\HCC-Coursework\\CSCI_131_2017\\src\\main\\java\\utils\\KeyboardReader.java'

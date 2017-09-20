@@ -1,5 +1,10 @@
 package assignments.a2;
 
+/**
+ * A 2D point object.
+ * 
+ * @author Jackson Wilson
+ */
 public class Point {
     private double x;
     private double y;

@@ -3,6 +3,12 @@ package assignments.a2;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/**
+ * This represents a linearly homogeneous degree-2 recurrence relation.
+ * Calculates the explicit sequence (if one exists) from a given recursive sequence.
+ * 
+ * @author Jackson Wilson
+ */
 public class LHD2Recurrence {
     private double r1;
     private double r2;

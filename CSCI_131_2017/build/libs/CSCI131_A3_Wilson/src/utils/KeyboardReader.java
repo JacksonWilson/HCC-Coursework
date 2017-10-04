@@ -336,17 +336,34 @@ public class KeyboardReader extends BufferedReader {
      * @throws IOException If an I/O error occurs.
      */
     public double readDouble(String prompt) throws IOException {
+        return readDouble(Double.MIN_VALUE, Double.MAX_VALUE, prompt);
+    }
+
+    /**
+     * Reads a valid double from the input stream that is between a minimum and maximum
+     * value, inclusive. Prompts the user to enter again if an invalid value is entered.
+     * 
+     * @param min The minimum acceptable value.
+     * @param max The maximum acceptable value.
+     * @param prompt A message to prompt the user for input.
+     * @return A double.
+     * @throws IOException If an I/O error occurs.
+     */
+    public double readDouble(double min, double max, String prompt) throws IOException {
         String input;
         do {
             if (!prompt.isEmpty())
                 System.out.print(prompt);
             try {
                 input = readLine();
-                if (!input.isEmpty() && stringIsFloatingNumeric(input))
-                    return Double.parseDouble(input);
+                if (!input.isEmpty() && stringIsFloatingNumeric(input)) {
+                    double value = Double.parseDouble(input);
+                    if (value >= min && value <= max)
+                        return value;
+                }
             } catch (NumberFormatException e) {}
             System.out.println("Please enter a value between "
-                + Double.MIN_VALUE + " and " + Double.MAX_VALUE);
+                + min + " and " + max);
         } while (true);
     }
 

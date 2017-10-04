@@ -91,8 +91,8 @@ public class CellularAutomaton {
     }
 
     /**
-     * Replaces the grid with a new one that is created by checking if the old cell
-     * should be alive for the next generation.
+     * Creates the next generation of cells by checking which cells should be alive based
+     * on the given conditions.
      * 
      * @return Whether another generation can occur or not.
      */
@@ -115,8 +115,8 @@ public class CellularAutomaton {
     }
 
     /**
-     * Appends the current generation to the save file as a grid. An asterisks signifies
-     * an alive cell.
+     * Appends the current generation of cells to the save file as a grid. An asterisks
+     * signifies an alive cell.
      */
     public void save() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.saveFile, true))) {
@@ -130,7 +130,7 @@ public class CellularAutomaton {
                 bw.write("-");
                 bw.newLine();
                 for (int j = 0; j < this.grid[i].length; j++) {
-                    bw.write(shouldBeAlive(i, j) ? "| * " : "|   ");
+                    bw.write(grid[i][j] ? "| * " : "|   ");
                 }
                 bw.write("|");
                 bw.newLine();
@@ -139,6 +139,7 @@ public class CellularAutomaton {
                 bw.write("----");
             }
             bw.write("-");
+            bw.newLine();
             bw.newLine();
 
         } catch (IOException ioe) {
@@ -153,9 +154,11 @@ public class CellularAutomaton {
      */
     private void setupInitialState(double initialProbability) {
         for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++)
+            for (int j = 0; j < grid[i].length; j++) {
                 grid[i][j] = Math.random() >= initialProbability;
+            }
         }
+        save();
     }
 
     /**

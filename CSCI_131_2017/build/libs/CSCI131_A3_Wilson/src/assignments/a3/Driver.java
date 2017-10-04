@@ -18,21 +18,19 @@ public class Driver {
      */
     public static void main(String[] args) {
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
-            int gridSize = keyReader.readInt("Enter grid size: ");
-            double initialProbability = keyReader.readDouble("Enter initial probability: ");
-            int minNeighbours = keyReader.readPositiveInt("Enter minimum neighbours: ");
-            int maxNeighbours = keyReader.readInt(minNeighbours, Integer.MAX_VALUE, "Enter maximum neighbours: ");
-            int maxGenerations = keyReader.readPositiveInt("Enter maximum generations: ");
-            int modulus = keyReader.readPositiveInt("Enter modulus: ");
+            int gridSize = keyReader.readInt(5, 50, "Enter grid size: ");
+            double initialProbability = keyReader.readDouble(0, 1, "Enter initial probability: ");
+            int minNeighbours = keyReader.readInt(1, 4, "Enter minimum neighbours: ");
+            int maxNeighbours = keyReader.readInt(minNeighbours, 8, "Enter maximum neighbours: ");
+            int maxGenerations = keyReader.readInt(1, Integer.MAX_VALUE, "Enter maximum generations: ");
+            int modulus = keyReader.readInt(1, maxGenerations, "Enter modulus: ");
             String fileName = keyReader.readLine("Enter save file name: ");
 
             CellularAutomaton cellAutomaton = new CellularAutomaton(gridSize, initialProbability, minNeighbours, maxNeighbours, maxGenerations, modulus, fileName);
             while (cellAutomaton.createNextGeneration()) {}
+
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
         }
-        System.out.println("DONE.");
     }
 }

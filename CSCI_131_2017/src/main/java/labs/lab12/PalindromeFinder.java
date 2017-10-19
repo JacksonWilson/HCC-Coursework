@@ -9,17 +9,19 @@ package labs.lab12;
 public class PalindromeFinder {
 
     /**
-     * Determines if a number is a palindrome.
+     * Determines if a number is a palindrome using recursion.
      * 
      * @param n A potential palindrome number.
      * @return Whether the number is a palindrome.
      */
     public static boolean isPalindrome(Integer n) {
         String nStr = n.toString();
-        for (int i = 0; i < nStr.length() / 2; i++) {
-            if (nStr.charAt(i) != nStr.charAt(nStr.length() - i - 1))
-                return false;
-        }
-        return true;
+        if (nStr.length() == 0 || nStr.length() == 1)
+            return true;
+
+        if (nStr.charAt(0) == nStr.charAt(nStr.length() - 1))
+            return isPalindrome(Integer.parseInt(nStr.substring(1, nStr.length() - 1)));
+
+        return false;
     }
 }

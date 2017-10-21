@@ -31,6 +31,8 @@ public class Driver {
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 }

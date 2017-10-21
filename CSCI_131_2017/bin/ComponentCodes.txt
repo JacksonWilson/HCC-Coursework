@@ -1,0 +1,19 @@
+7121,headlight
+8761,battery
+7655,gas tank
+3559,air intake housing
+1,New component
+3558,air intake manifold
+1313,air bag control module
+3512,drive belt
+2993,camshaft
+3432,engine
+1441,muffler
+8219,radiator gasket
+5115,fuel level sensor
+5116,tire pressure sensor
+5149,crank case
+5117,gas cap sensor
+5118,oil pressure sensor
+5715,front quarter panel
+5716,hood

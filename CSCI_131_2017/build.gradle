@@ -23,10 +23,10 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = "CSCI131_Collections_1_LHM_Wilson"
-def entry = "labs.lab14.DriverLinkedHashMap"
+def name = "CSCI131_A4_Wilson"
+def entry = "assignments.a4.Driver"
 def includes = [
-    "labs/lab14/*",
+    "assignments/a4/*",
     "utils/KeyboardReader.*"
 ]
 def excludes = [

@@ -53,7 +53,35 @@ public class KeyboardReader extends BufferedReader {
      * @throws IOException If an I/O error occurs.
      */
     public String readLine() throws IOException {
-        return readLine("");
+        return readLine("", true);
+    }
+
+    /**
+     * Reads a line of text. A line is considered to be terminated by any one of a line
+     * feed ('\n'), a carriage return ('\r'), or a carriage return followed immediately
+     * by a linefeed.
+     * 
+     * @param allowEmpty A flag to allow empty strings as valid input.
+     * @return A String containing the contents of the line, not including any line-
+     * termination characters, or null if the end of the stream has been reached.
+     * @throws IOException If an I/O error occurs.
+     */
+    public String readLine(boolean allowEmpty) throws IOException {
+        return readLine("", allowEmpty);
+    }
+
+    /**
+     * Reads a line of text. A line is considered to be terminated by any one of a line
+     * feed ('\n'), a carriage return ('\r'), or a carriage return followed immediately
+     * by a linefeed.
+     * 
+     * @param prompt A message to prompt the user for input.
+     * @return A String containing the contents of the line, not including any line-
+     * termination characters, or null if the end of the stream has been reached.
+     * @throws IOException If an I/O error occurs.
+     */
+    public String readLine(String prompt) throws IOException {
+        return readLine(prompt, true);
     }
 
     /**
@@ -62,11 +90,12 @@ public class KeyboardReader extends BufferedReader {
      * followed immediately by a linefeed.
      * 
      * @param prompt A message to prompt the user for input.
+     * @param allowEmpty A flag to allow empty strings as valid input.
      * @return A String containing the contents of the line, not including any line-
      * termination characters, or null if the end of the stream has been reached.
      * @throws IOException If an I/O error occurs.
      */
-    public String readLine(String prompt) throws IOException {
+    public String readLine(String prompt, boolean allowEmpty) throws IOException {
         String input;
         do {
             System.out.print(prompt);
@@ -75,7 +104,9 @@ public class KeyboardReader extends BufferedReader {
                 System.out.println("The end of the stream has been reached.");
                 throw new IOException();
             } else {
-                return input;
+                if (allowEmpty || !input.isEmpty())
+                    return input;
+                System.out.println("Please enter something.");
             }
         } while (true);
     }
@@ -111,7 +142,7 @@ public class KeyboardReader extends BufferedReader {
      * @return A character.
      * @throws IOException If an I/O error occurs.
      */
-    public char readChar(char[] possibleCharacters) throws IOException {
+    public char readChar(char... possibleCharacters) throws IOException {
         return readChar("", possibleCharacters);
     }
 
@@ -124,7 +155,7 @@ public class KeyboardReader extends BufferedReader {
      * @return A character.
      * @throws IOException If an I/O error occurs.
      */
-    public char readChar(String prompt, char[] possibleCharacters) throws IOException {
+    public char readChar(String prompt, char... possibleCharacters) throws IOException {
         String input;
         do {
             System.out.print(prompt);

@@ -1,5 +1,10 @@
 package assignments.a4;
 
+/**
+ * A work order consists of a order number, job code, and component code.
+ * 
+ * @author Jackson Wilson
+ */
 public class WorkOrder {
     private String orderNumber;
     private String jobCode;

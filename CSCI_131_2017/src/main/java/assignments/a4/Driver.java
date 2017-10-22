@@ -9,13 +9,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.time.LocalDate;
 
 import utils.KeyboardReader;
 
@@ -33,15 +33,15 @@ public class Driver {
             if (employees == null || employees.isEmpty())
                 return;
 
-            Employee currentUser = getCurrentUser(employees);
+            Employee currentUser = getCurrentEmployee(employees);
             if (currentUser == null) {
                 System.err.println("SECURITY WARNING: FAILED TO SUPPLY VALID ID WITHIN 3 ATTEMPTS.");
                 return;
             }
 
-            HashMap<String, String> componentCodes = getCodes("ComponentCodes.txt");
-            HashMap<String, String> jobCodes = getCodes("JobCodes.txt");
-            LinkedList<WorkOrder> workOrders = getOrders("WorkOrders.txt");
+            HashMap<String, String> componentCodes = getCodeValues("ComponentCodes.txt");
+            HashMap<String, String> jobCodes = getCodeValues("JobCodes.txt");
+            LinkedList<WorkOrder> workOrders = getWorkOrders("WorkOrders.txt");
 
             String input;
             do {
@@ -60,11 +60,11 @@ public class Driver {
                     if (currentUser.getSecurityLevel().equals("View only"))
                         System.out.println("Please select a number from the list.");
                     else
-                        createNewOrder(workOrders, jobCodes, componentCodes);
+                        createNewWorkOrder(workOrders, jobCodes, componentCodes);
                     break;
                 case "5": {
                     if (currentUser.getSecurityLevel().equals("Edit"))
-                        createNewCodeValue(keyReader.readLine("Component code: "), componentCodes);
+                        createNewCodeValue(keyReader.readLine("Component code: ", false), componentCodes);
                     else
                         System.out.println("Please select a number from the list.");
                     break;
@@ -86,10 +86,10 @@ public class Driver {
                 case "9": {
                     switch (currentUser.getSecurityLevel()) {
                     case "Edit":
-                        saveCodes(jobCodes, "JobCodes.txt");
-                        saveCodes(componentCodes, "ComponentCodes.txt");
+                        saveCodeValues(jobCodes, "JobCodes.txt");
+                        saveCodeValues(componentCodes, "ComponentCodes.txt");
                     case "Partial edit":
-                        saveOrders(workOrders, "WorkOrders.txt");
+                        saveWorkOrders(workOrders, "WorkOrders.txt");
                     }
                     break;
                 }
@@ -102,10 +102,10 @@ public class Driver {
         }
     }
     
-    private static ArrayList<Employee> getEmployees(String path) {
+    private static ArrayList<Employee> getEmployees(String filePath) {
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
             Employee employee;
 
             while ((employee = (Employee)ois.readObject()) != null) {
@@ -123,10 +123,10 @@ public class Driver {
         return employees;
     }
 
-    private static HashMap<String, String> getCodes(String path) throws IOException {
+    private static HashMap<String, String> getCodeValues(String filePath) throws IOException {
         HashMap<String, String> codes = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] split = line.split(",");
@@ -137,10 +137,10 @@ public class Driver {
         return codes;
     }
 
-    private static LinkedList<WorkOrder> getOrders(String path) throws IOException {
+    private static LinkedList<WorkOrder> getWorkOrders(String filePath) throws IOException {
         LinkedList<WorkOrder> workOrders = new LinkedList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String order;
             while ((order = br.readLine()) != null) {
                 String[] orderInfo = order.split(",");
@@ -149,6 +149,42 @@ public class Driver {
         }
 
         return workOrders;
+    }
+
+    private static Employee getCurrentEmployee(ArrayList<Employee> employees) throws IOException {
+        String id;
+        int attempts = 0;
+        Employee currentEmployee = null;
+
+        do {
+            attempts++;
+            id = keyReader.readLine("Enter ID: ");
+
+            for (Employee e : employees) {
+                if (e.getID().equals(id))
+                    currentEmployee = e;
+            }
+        } while (currentEmployee == null && attempts < 3);
+
+        return currentEmployee;
+    }
+    
+    private static void displayMenu(String securityLevel) {
+        System.out.println();
+        System.out.println("1. Create work order report");
+        System.out.println("2. View specific component code");
+        System.out.println("3. View specific job code");
+
+        if (securityLevel.equals("Partial edit") || securityLevel.equals("Edit")) {
+            System.out.println("4. Create new work order");
+
+            if (securityLevel.equals("Edit")) {
+                System.out.println("5. Add component code");
+                System.out.println("6. Delete component code");
+                System.out.println("7. Update component code");
+            }
+        }
+        System.out.println("9. Exit");
     }
 
     private static void createReport(Employee currentUser, LinkedList<WorkOrder> workOrders, HashMap<String, String> jobCodes, HashMap<String, String> componentCodes) throws IOException {
@@ -187,23 +223,13 @@ public class Driver {
             System.out.println("Created report.");
         }
     }
-
-    private static Employee getCurrentUser(ArrayList<Employee> employees) throws IOException {
-        String id;
-        int attempts = 0;
-        Employee currentUser = null;
-
-        do {
-            attempts++;
-            id = keyReader.readLine("Enter ID: ");
-
-            for (Employee e : employees) {
-                if (e.getID().equals(id))
-                    currentUser = e;
-            }
-        } while (currentUser == null && attempts < 3);
-
-        return currentUser;
+    
+    private static void viewCodeValue(String code, HashMap<String, String> codes) {
+        if (codes.containsKey(code)) {
+            System.out.println(code + " - " + codes.get(code));
+        } else {
+            System.out.println("No value exists for code: " + code);
+        }
     }
 
     private static void updateCodeValue(String code, HashMap<String, String> codes) throws IOException {
@@ -224,13 +250,6 @@ public class Driver {
         }
     }
 
-    private static void viewCodeValue(String code, HashMap<String, String> codes) {
-        if (codes.containsKey(code))
-            System.out.println(code + " - " + codes.get(code));
-        else
-            System.out.println("No value exists for code: " + code);
-    }
-
     private static void createNewCodeValue(String code, HashMap<String, String> codes) throws IOException {
         if (codes.containsKey(code)) {
             System.out.println("Code already exists: " + code + " [" + codes.get(code) + "]");
@@ -241,7 +260,7 @@ public class Driver {
         }
     }
 
-    private static void createNewOrder(LinkedList<WorkOrder> workOrders, HashMap<String, String> jobCodes, HashMap<String, String> componentCodes) throws IOException {
+    private static void createNewWorkOrder(LinkedList<WorkOrder> workOrders, HashMap<String, String> jobCodes, HashMap<String, String> componentCodes) throws IOException {
         String orderNumber;
         do {
             orderNumber = keyReader.readLine("Order number: ");
@@ -272,17 +291,17 @@ public class Driver {
             + " [" + componentCodes.get(newOrder.getComponentCode()) + "]");
     }
 
-    private static void saveCodes(HashMap<String, String> codes, String path) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+    private static void saveCodeValues(HashMap<String, String> codes, String filePath) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (Map.Entry<String, String> entry : codes.entrySet()) {
                 bw.write(entry.getKey() + "," + entry.getValue());
                 bw.newLine();
             }
         }
     }
-
-    private static void saveOrders(LinkedList<WorkOrder> workOrders, String path) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+    
+    private static void saveWorkOrders(LinkedList<WorkOrder> workOrders, String filePath) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (WorkOrder order : workOrders) {
                 bw.write(order.getOrderNumber() + "," + order.getJobCode() + "," + order.getComponentCode());
                 bw.newLine();
@@ -290,24 +309,9 @@ public class Driver {
         }
     }
 
-    private static void displayMenu(String securityLevel) {
-        System.out.println();
-        System.out.println("1. Create work order report");
-        System.out.println("2. View specific component code");
-        System.out.println("3. View specific job code");
-
-        if (securityLevel.equals("Partial edit") || securityLevel.equals("Edit")) {
-            System.out.println("4. Create new work order");
-
-            if (securityLevel.equals("Edit")) {
-                System.out.println("5. Add component code");
-                System.out.println("6. Delete component code");
-                System.out.println("7. Update component code");
-            }
-        }
-        System.out.println("9. Exit");
-    }
-
+    /*
+     * Finds the next report number in the current directory.
+     */
     private static int getReportNumber() {
         File[] listFiles = new File(".").listFiles();
         int reportNum = 0;

@@ -124,29 +124,6 @@ ArrayList<Deliverable> deliverables = [
     ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
 ]
 
-task genDeliverable {
-    Deliverable deliverable = ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]]
-    def de = deleteExisting(deliverable)
-    def sj = specificJar(deliverable)
-    def cbf = copyBinFiles(deliverable)
-    def crf = copyResFiles(deliverable)
-    def csf = copySrcFiles(deliverable)
-    def gjdf = generateJavadocFiles(deliverable)
-
-    dependsOn de
-    dependsOn sj
-    dependsOn cbf
-    dependsOn crf
-    dependsOn csf
-    dependsOn gjdf
-
-    sj.mustRunAfter de
-    cbf.mustRunAfter sj
-    crf.mustRunAfter cbf
-    csf.mustRunAfter crf
-    gjdf.mustRunAfter csf
-}
-
 task genDeliverables {
     for (Deliverable deliverable : deliverables) {
         def de = deleteExisting(deliverable)

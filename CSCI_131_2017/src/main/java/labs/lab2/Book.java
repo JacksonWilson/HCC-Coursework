@@ -23,9 +23,9 @@ public class Book {
     /**
      * A book object with given title, author, and number of pages.
      * 
-     * @param title
-     * @param author
-     * @param numOfPages
+     * @param title The book title
+     * @param author The author
+     * @param numOfPages The number of pages
      */
     public Book(String title, String author, int numOfPages) {
         this.title = title;

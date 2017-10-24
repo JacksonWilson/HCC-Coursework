@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.time.LocalDate;
 import java.time.temporal.IsoFields;
 import java.util.ArrayList;
@@ -18,8 +17,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import utils.KeyboardReader;
+import utils.ObjectInputStreamResolved;
 
 public class Driver {
+    private static final String FILE_EMPLOYEE_DATA = "res/assignments/a4/Employees.dat";
+    private static final String FILE_COMPONENT_CODES = "res/assignments/a4/ComponentCodes.txt";
+    private static final String FILE_JOB_CODES = "res/assignments/a4/JobCodes.txt";
+    private static final String FILE_WORK_ORDERS = "res/assignments/a4/WorkOrders.txt";
 
     private static KeyboardReader keyReader;
 
@@ -29,7 +33,7 @@ public class Driver {
 
     public static void main(String[] args) {
         try {
-            ArrayList<Employee> employees = getEmployees("EmployeesFixed.dat");
+            ArrayList<Employee> employees = getEmployees(FILE_EMPLOYEE_DATA);
             if (employees == null || employees.isEmpty())
                 return;
 
@@ -39,9 +43,9 @@ public class Driver {
                 return;
             }
 
-            HashMap<String, String> componentCodes = getCodeValues("ComponentCodes.txt");
-            HashMap<String, String> jobCodes = getCodeValues("JobCodes.txt");
-            LinkedList<WorkOrder> workOrders = getWorkOrders("WorkOrders.txt");
+            HashMap<String, String> componentCodes = getCodeValues(FILE_COMPONENT_CODES);
+            HashMap<String, String> jobCodes = getCodeValues(FILE_JOB_CODES);
+            LinkedList<WorkOrder> workOrders = getWorkOrders(FILE_WORK_ORDERS);
 
             String input;
             do {
@@ -86,10 +90,10 @@ public class Driver {
                 case "9": {
                     switch (currentUser.getSecurityLevel()) {
                     case "Edit":
-                        saveCodeValues(jobCodes, "JobCodes.txt");
-                        saveCodeValues(componentCodes, "ComponentCodes.txt");
+                        saveCodeValues(jobCodes, FILE_JOB_CODES);
+                        saveCodeValues(componentCodes, FILE_COMPONENT_CODES);
                     case "Partial edit":
-                        saveWorkOrders(workOrders, "WorkOrders.txt");
+                        saveWorkOrders(workOrders, FILE_WORK_ORDERS);
                     }
                     break;
                 }
@@ -105,10 +109,11 @@ public class Driver {
     private static ArrayList<Employee> getEmployees(String filePath) {
         ArrayList<Employee> employees = new ArrayList<>();
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+        try (ObjectInputStreamResolved oisr = new ObjectInputStreamResolved(new FileInputStream(filePath))) {
+            oisr.putClassDefinition("Employee", assignments.a4.Employee.class);
             Employee employee;
 
-            while ((employee = (Employee)ois.readObject()) != null) {
+            while ((employee = (Employee)oisr.readObject()) != null) {
                 employees.add(employee);
             }
 

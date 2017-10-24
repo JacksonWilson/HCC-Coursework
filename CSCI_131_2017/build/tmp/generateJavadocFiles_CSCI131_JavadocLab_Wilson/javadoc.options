@@ -1,0 +1,9 @@
+-d 'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\build\\libs\\CSCI131_JavadocLab_Wilson\\doc'
+-doctitle 'CSCI_131_2017 API'
+-quiet 
+-windowtitle 'CSCI_131_2017 API'
+'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Driver.java'
+'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Point.java'
+'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\Segment.java'
+'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\labs\\lab5\\TestDriver.java'
+'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\utils\\KeyboardReader.java'

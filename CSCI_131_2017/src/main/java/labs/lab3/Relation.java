@@ -24,6 +24,8 @@ public class Relation {
 
     /**
      * Instantiates relation matrix with 0's and optionally populates the relation.
+     * 
+     * @param populate Flag to prompt user to prompt relation.
      */
     public Relation(boolean populate) {
         this();

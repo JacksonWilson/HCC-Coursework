@@ -5,20 +5,23 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+import utils.ObjectInputStreamResolved;
+
 public class Driver {
+    private static final String FILE_SOLDITEMS_DATA = "res/labs/lab10/solditemswithnull.dat";
 
     public static void main(String[] args) {
         ArrayList<Agent> agentData = new ArrayList<>();
 
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("solditemswithnull_fix.dat"))) {
+        try (ObjectInputStreamResolved oisr = new ObjectInputStreamResolved(new FileInputStream(FILE_SOLDITEMS_DATA))) {
+            oisr.putClassDefinition("SoldItem", labs.lab10.SoldItem.class);
             SoldItem item;
             
-            while ((item = (SoldItem)ois.readObject()) != null) {
+            while ((item = (SoldItem)oisr.readObject()) != null) {
                 
                 int existingAgentIndex = -1;
                 for (int i = 0; i < agentData.size(); i++) {

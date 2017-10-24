@@ -1,14 +1,20 @@
 package labs.lab7;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class Driver {
     public static void main(String[] args) {
         try {
-            Class<?> clazz = Class.forName("Riddle");
+            Class<?> clazz = URLClassLoader.newInstance(new URL[]{new File("../res/labs/lab7").toURI().toURL()}).loadClass("Riddle");
             printRecursively(clazz);
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
+        } catch (MalformedURLException mue) {
+            mue.printStackTrace();
         }
     }
 

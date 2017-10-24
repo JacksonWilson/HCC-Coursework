@@ -1,6 +1,4 @@
-
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'application'
 
 repositories {
@@ -8,14 +6,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:23.0'
+    compile 'com.google.guava:guava:21.0'
     testCompile 'junit:junit:4.12'
 }
-
-// compileJava {
-//     options.fork = true
-//     options.forkOptions.executable = "C:/Program Files (x86)/Java/jdk1.8.0_51/bin/javac"
-// }
 
 mainClassName = 'labs.lab1.Driver'
 
@@ -23,61 +16,157 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
-def name = "CSCI131_A4_Wilson"
-def entry = "assignments.a4.Driver"
-def includes = [
-    "assignments/a4/*",
-    "utils/KeyboardReader.*"
+class Deliverable {
+    private def name;
+    private def entry;
+    private def includes;
+    private def excludes;
+
+    Deliverable(name, entry, includes, excludes) {
+        this.name = name;
+        this.entry = entry;
+        this.includes = includes;
+        this.excludes = excludes;
+    }
+
+    public getName() {
+        name;
+    }
+
+    public getEntry() {
+        entry;
+    }
+
+    public getIncludes() {
+        includes;
+    }
+
+    public getExcludes() {
+        excludes;
+    }
+}
+
+def deleteExisting(deliverable) {
+    return tasks.create(name: "deleteExisting_${deliverable.getName()}", type: Delete) {
+        delete "$rootDir/build/libs/${deliverable.getName()}"
+    }
+}
+
+def specificJar(deliverable) {
+    return tasks.create(name: "specificJar_${deliverable.getName()}", type: Jar) {
+        baseName = deliverable.getName()
+        destinationDir = file("$rootDir/build/libs/${deliverable.getName()}")
+        manifest.attributes "Main-Class": deliverable.getEntry()
+
+        from sourceSets.main.output
+        (deliverable.getIncludes()).each { i -> include i }
+        (deliverable.getExcludes()).each { e -> exclude e }
+    }
+}
+
+def copyBinFiles(deliverable) {
+    return tasks.create(name: "copyBinFiles_${deliverable.getName()}", type: Copy) {
+        from "bin"
+        (deliverable.getIncludes()).each { i -> include i }
+        (deliverable.getExcludes()).each { e -> exclude e }
+        into "build/libs/${deliverable.getName()}/bin"
+    }
+}
+
+def copyResFiles(deliverable) {
+    return tasks.create(name: "copyResFiles_${deliverable.getName()}", type: Copy) {
+        from "res"
+        (deliverable.getIncludes()).each { i -> include i }
+        (deliverable.getExcludes()).each { e -> exclude e }
+        into "build/libs/${deliverable.getName()}/res"
+    }
+}
+
+def copySrcFiles(deliverable) {
+    return tasks.create(name: "copySrcFiles_${deliverable.getName()}", type: Copy) {
+        from "src/main/java"
+        (deliverable.getIncludes()).each { i -> include i }
+        (deliverable.getExcludes()).each { e -> exclude e }
+        into "build/libs/${deliverable.getName()}/src"
+    }
+}
+
+def generateJavadocFiles(deliverable) {
+    return tasks.create(name: "generateJavadocFiles_${deliverable.getName()}", type: Javadoc) {
+        destinationDir = file("$rootDir/build/libs/${deliverable.getName()}/doc")
+        source = sourceSets.main.allJava
+        (deliverable.getIncludes()).each { i -> include i }
+        (deliverable.getExcludes()).each { e -> exclude e }
+        failOnError false
+    }
+}
+
+ArrayList<Deliverable> deliverables = [
+    ["CSCI131_A1_Wilson", "assignments.a1.Driver", ["assignments/a1/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_A2_Wilson", "assignments.a2.Driver", ["assignments/a2/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_A3_Wilson", "assignments.a3.Driver", ["assignments/a3/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]],
+
+    ["CSCI131_JavaBasicsLab_Wilson", "labs.lab1.Driver", ["labs/lab1/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_ReviewLab_Wilson", "labs.lab2.Driver", ["labs/lab2/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_RelationLab_Wilson", "labs.lab3.Driver", ["labs/lab3/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_ExceptionLab_Wilson", "labs.lab4.Driver", ["labs/lab4/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_JavadocLab_Wilson", "labs.lab5.Driver", ["labs/lab5/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_Recursion_Sequences_Wilson", "labs.lab6.Driver", ["labs/lab6/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_Recursion_Reflection_Wilson", "labs.lab7.Driver", ["labs/lab7/*"],["**/*Test.*"]],
+    ["CSCI131_RecursivePower_Wilson", "labs.lab8.Driver", ["labs/lab8/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_BasicFileIO_Wilson", "labs.lab9.Driver", ["labs/lab9/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_FileIO_Objects_Wilson", "labs.lab10.Driver", ["labs/lab10/*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]],
+    ["CSCI131_FileIO_TempFiles_Wilson", "labs.lab11.Driver", ["labs/lab11/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_MidtermReview_Wilson", "labs.lab12.ProcessInputFile", ["labs/lab12/*"],["**/*Test.*"]],
+    ["CSCI131_Comparing_Wilson", "labs.lab13.Driver", ["labs/lab13/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_Collections_1_Wilson", "labs.lab14.Driver", ["labs/lab14/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
 ]
-def excludes = [
-    "**/*Test.*"
-]
 
-task deleteExisting(type: Delete) {
-    delete "$rootDir/build/libs/$name"
+task genDeliverable {
+    Deliverable deliverable = ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]]
+    def de = deleteExisting(deliverable)
+    def sj = specificJar(deliverable)
+    def cbf = copyBinFiles(deliverable)
+    def crf = copyResFiles(deliverable)
+    def csf = copySrcFiles(deliverable)
+    def gjdf = generateJavadocFiles(deliverable)
+
+    dependsOn de
+    dependsOn sj
+    dependsOn cbf
+    dependsOn crf
+    dependsOn csf
+    dependsOn gjdf
+
+    sj.mustRunAfter de
+    cbf.mustRunAfter sj
+    crf.mustRunAfter cbf
+    csf.mustRunAfter crf
+    gjdf.mustRunAfter csf
 }
 
-task specificJar(type: Jar) {
-    baseName = name
-    destinationDir = file("$rootDir/build/libs/$name")
-    manifest.attributes "Main-Class": entry
+task genDeliverables {
+    for (Deliverable deliverable : deliverables) {
+        def de = deleteExisting(deliverable)
+        def sj = specificJar(deliverable)
+        def cbf = copyBinFiles(deliverable)
+        def crf = copyResFiles(deliverable)
+        def csf = copySrcFiles(deliverable)
+        def gjdf = generateJavadocFiles(deliverable)
 
-    from sourceSets.main.output
-    (includes).each { i -> include i }
-    (excludes).each { e -> exclude e }
-}
+        dependsOn de
+        dependsOn sj
+        dependsOn cbf
+        dependsOn crf
+        dependsOn csf
+        dependsOn gjdf
 
-task copyBinFiles(type: Copy) {
-    from "bin"
-    (includes).each { i -> include i }
-    (excludes).each { e -> exclude e }
-    into "build/libs/$name/bin"
-}
-
-task copySrcFiles(type: Copy) {
-    from "src/main/java"
-    (includes).each { i -> include i }
-    (excludes).each { e -> exclude e }
-    into "build/libs/$name/src"
-}
-
-task generateJavadocFiles(type: Javadoc) {
-    destinationDir = file("$rootDir/build/libs/$name/doc")
-    source = sourceSets.main.allJava
-    (includes).each { i -> include i }
-    (excludes).each { e -> exclude e }
-    failOnError false
-}
-
-task buildSpecific {
-    dependsOn deleteExisting
-    dependsOn specificJar
-    dependsOn copyBinFiles
-    dependsOn copySrcFiles
-    dependsOn generateJavadocFiles
-
-    specificJar.mustRunAfter deleteExisting
-    copyBinFiles.mustRunAfter specificJar
-    copySrcFiles.mustRunAfter copyBinFiles
-    generateJavadocFiles.mustRunAfter copySrcFiles
+        sj.mustRunAfter de
+        cbf.mustRunAfter sj
+        crf.mustRunAfter cbf
+        csf.mustRunAfter crf
+        gjdf.mustRunAfter csf
+    }
 }

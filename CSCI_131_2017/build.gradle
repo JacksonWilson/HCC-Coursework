@@ -102,30 +102,32 @@ def generateJavadocFiles(deliverable) {
 }
 
 ArrayList<Deliverable> deliverables = [
-    ["CSCI131_A1_Wilson", "assignments.a1.Driver", ["assignments/a1/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_A2_Wilson", "assignments.a2.Driver", ["assignments/a2/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_A3_Wilson", "assignments.a3.Driver", ["assignments/a3/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]],
+    ["CSCI131_A1_Wilson", "assignments.a1.Driver", ["assignments/a1/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_A2_Wilson", "assignments.a2.Driver", ["assignments/a2/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_A3_Wilson", "assignments.a3.Driver", ["assignments/a3/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"], ["**/*Test.*"]],
 
-    ["CSCI131_JavaBasicsLab_Wilson", "labs.lab1.Driver", ["labs/lab1/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_ReviewLab_Wilson", "labs.lab2.Driver", ["labs/lab2/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_RelationLab_Wilson", "labs.lab3.Driver", ["labs/lab3/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_ExceptionLab_Wilson", "labs.lab4.Driver", ["labs/lab4/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_JavaBasicsLab_Wilson", "labs.lab1.Driver", ["labs/lab1/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_ReviewLab_Wilson", "labs.lab2.Driver", ["labs/lab2/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_RelationLab_Wilson", "labs.lab3.Driver", ["labs/lab3/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_ExceptionLab_Wilson", "labs.lab4.Driver", ["labs/lab4/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
     ["CSCI131_JavadocLab_Wilson", "labs.lab5.Driver", ["labs/lab5/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_Recursion_Sequences_Wilson", "labs.lab6.Driver", ["labs/lab6/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_Recursion_Reflection_Wilson", "labs.lab7.Driver", ["labs/lab7/*"],["**/*Test.*"]],
-    ["CSCI131_RecursivePower_Wilson", "labs.lab8.Driver", ["labs/lab8/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_BasicFileIO_Wilson", "labs.lab9.Driver", ["labs/lab9/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_FileIO_Objects_Wilson", "labs.lab10.Driver", ["labs/lab10/*", "utils/ObjectInputStreamResolved.*"],["**/*Test.*"]],
-    ["CSCI131_FileIO_TempFiles_Wilson", "labs.lab11.Driver", ["labs/lab11/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_MidtermReview_Wilson", "labs.lab12.ProcessInputFile", ["labs/lab12/*"],["**/*Test.*"]],
-    ["CSCI131_Comparing_Wilson", "labs.lab13.Driver", ["labs/lab13/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_Collections_1_Wilson", "labs.lab14.Driver", ["labs/lab14/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
-    ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*"],["**/*Test.*"]],
+    ["CSCI131_Recursion_Sequences_Wilson", "labs.lab6.Driver", ["labs/lab6/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Recursion_Reflection_Wilson", "labs.lab7.Driver", ["labs/lab7/*"], ["**/*Test.*"]],
+    ["CSCI131_RecursivePower_Wilson", "labs.lab8.Driver", ["labs/lab8/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_BasicFileIO_Wilson", "labs.lab9.Driver", ["labs/lab9/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_FileIO_Objects_Wilson", "labs.lab10.Driver", ["labs/lab10/*", "utils/ObjectInputStreamResolved.*"], ["**/*Test.*"]],
+    ["CSCI131_FileIO_TempFiles_Wilson", "labs.lab11.Driver", ["labs/lab11/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_MidtermReview_Wilson", "labs.lab12.ProcessInputFile", ["labs/lab12/*"], ["**/*Test.*"]],
+    ["CSCI131_Comparing_Wilson", "labs.lab13.Driver", ["labs/lab13/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Collections_1_Wilson", "labs.lab14.Driver", ["labs/lab14/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"]]
 ]
 
 task genDeliverables {
-    for (Deliverable deliverable : deliverables) {
+    Deliverable deliverable = new Deliverable("CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"])
+    //for (Deliverable deliverable : deliverables) {
         def de = deleteExisting(deliverable)
         def sj = specificJar(deliverable)
         def cbf = copyBinFiles(deliverable)
@@ -145,5 +147,5 @@ task genDeliverables {
         crf.mustRunAfter cbf
         csf.mustRunAfter crf
         gjdf.mustRunAfter csf
-    }
+    //}
 }

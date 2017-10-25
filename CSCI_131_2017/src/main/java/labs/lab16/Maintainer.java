@@ -1,4 +1,4 @@
-package labs.lab15;
+package labs.lab16;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

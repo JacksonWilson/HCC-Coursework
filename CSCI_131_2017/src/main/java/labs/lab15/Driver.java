@@ -7,13 +7,9 @@ import utils.SortAlgorithms;
 
 public class Driver {
 
-    public enum SortType {
-        Bubble,
-        Insertion,
-        Merge
-    }
-
     public static void main(String[] args) {
+        String[] sortTypes = {"Bubble", "Insertion", "Merge"};
+        
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
 
             String filePath = keyReader.readLine("Enter file path of list: ");
@@ -21,27 +17,29 @@ public class Driver {
             int[] arr = Maintainer.readFileIntoArray(filePath, sizeOfList);
 
             int counter = 0;
-            for (SortType type : SortType.values()) {
-                System.out.println(++counter + ". " + type.name());
+            for (String type : sortTypes) {
+                System.out.println(++counter + ". " + type);
             }
 
-            int selection = keyReader.readInt(1, SortType.values().length) - 1;
+            int selection = keyReader.readInt(1, sortTypes.length) - 1;
 
-            switch (SortType.values()[selection]) {
-            case Bubble:
+            long start = System.currentTimeMillis();
+            switch (selection) {
+            case 0:
                 SortAlgorithms.bubble(arr);
                 break;
-            case Insertion:
+            case 1:
                 SortAlgorithms.insertion(arr);
                 break;
-            case Merge:
+            case 2:
                 SortAlgorithms.merge(arr);
                 break;
             }
+            long end = System.currentTimeMillis();
 
-            Maintainer.writeArrayToFile("SortedBy" + SortType.values()[selection].name() + ".txt", arr);
+            Maintainer.writeArrayToFile("SortedBy" + sortTypes[selection] + ".txt", arr);
 
-            System.out.println("Done.");
+            System.out.println("Finished sorting " + arr.length + " elements using " + sortTypes[selection].toLowerCase() + " sort in " + (end - start) + " milliseconds.");
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }

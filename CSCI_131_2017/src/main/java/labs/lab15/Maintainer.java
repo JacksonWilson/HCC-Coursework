@@ -1,6 +1,7 @@
 package labs.lab15;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class Maintainer {
     public static int[] readFileIntoArray (String fileName, int size) {
@@ -33,8 +34,28 @@ public class Maintainer {
         try {
             bw = new BufferedWriter(new FileWriter(fileName));
 
-            for (int i = 0; i < numsToWrite.length; i++) {
-                bw.write(String.valueOf(numsToWrite[i]));
+            for (int n : numsToWrite) {
+                bw.write(String.valueOf(n));
+                bw.newLine();
+            }
+
+            bw.close();
+        }
+
+        catch (IOException ioe) {
+            System.out.println(ioe.getMessage());
+        }
+    }
+
+    public static <T> void writeArrayToFile (String fileName, ArrayList<T> listToWrite) {
+        //Wrties an array of integers to a file as indicated by the parameters
+        BufferedWriter bw;
+
+        try {
+            bw = new BufferedWriter(new FileWriter(fileName));
+
+            for (T v : listToWrite) {
+                bw.write(String.valueOf(v));
                 bw.newLine();
             }
 

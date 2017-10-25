@@ -1,5 +1,9 @@
 package labs.lab15;
 
+import java.util.ArrayList;
+
+import utils.SortAlgorithms;
+
 public class Merge {
     
     public static void main(String[] args) {
@@ -7,13 +11,18 @@ public class Merge {
 
         long start = System.currentTimeMillis();
         
-        sort(arr);
+        // sort(arr);
+
+        ArrayList<Integer> arrList = new ArrayList<>();
+        for (int n : arr)
+            arrList.add(n);
+        SortAlgorithms.merge(arrList);
 
         long end = System.currentTimeMillis();
 
         System.out.println("Merge sort time: " + (end - start));
 
-        Maintainer.writeArrayToFile("res/labs/lab15/SortedByMerge.txt", arr);
+        Maintainer.writeArrayToFile("res/labs/lab15/SortedByMerge.txt", arrList);
     }
 
     public static void sort(int[] arr) {

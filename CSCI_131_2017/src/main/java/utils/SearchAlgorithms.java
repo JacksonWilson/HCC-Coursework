@@ -208,7 +208,7 @@ public class SearchAlgorithms {
         return binaryRecur(arr, i / 2, Math.min(i, arr.length), value);
     }
 
-    public static <T extends Comparable<T>> int fionacci(ArrayList<T> arr, T value) {
+    public static <T extends Comparable<T>> int fibonacci(ArrayList<T> arr, T value) {
         int fibNm2 = 0;
         int fibNm1 = 1;
         int fibN = fibNm2 + fibNm1;
@@ -245,7 +245,7 @@ public class SearchAlgorithms {
         return -1;
     }
 
-    public static int fionacci(int[] arr, int value) {
+    public static int fibonacci(int[] arr, int value) {
         int fibNm2 = 0;
         int fibNm1 = 1;
         int fibN = fibNm2 + fibNm1;

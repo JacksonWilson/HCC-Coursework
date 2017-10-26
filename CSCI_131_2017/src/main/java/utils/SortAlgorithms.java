@@ -225,6 +225,28 @@ public class SortAlgorithms {
         }
     }
 
+    public static <T extends Comparable<T>> void selection(ArrayList<T> arr) {
+        for (int i = 0; i < arr.size() - 1; i++) {
+            int indexOfMin = i;
+            for (int j = i + 1; j < arr.size(); j++) {
+                if (arr.get(j).compareTo(arr.get(indexOfMin)) > 0)
+                    indexOfMin = j;
+            }
+            swap(arr, i, indexOfMin);
+        }
+    }
+
+    public static void selection(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int indexOfMin = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[indexOfMin])
+                    indexOfMin = j;
+            }
+            swap(arr, i, indexOfMin);
+        }
+    }
+
     private static <T extends Comparable<T>> void swap(ArrayList<T> arr, int i, int j) {
         T temp = arr.get(i);
         arr.set(i, arr.get(i));

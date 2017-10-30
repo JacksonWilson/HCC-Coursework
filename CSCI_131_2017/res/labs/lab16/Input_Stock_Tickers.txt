@@ -1,0 +1,46 @@
+45
+GM,NYSE,General Motors Co
+BP,NYSE,BP PLC
+BER,Warsaw,Berkshire Hathaway Inc
+AAPL,Mexico,Apple Inc
+GOOG,NASDAQ,Alphabet Inc
+DIS,Buenos Aires,Walt Disney Co
+MCD,NYSE,McDonald's Corp
+GOOG,Mexico,Alphabet Inc
+UPS,NYSE,United Parel Service Inc
+AABA,NASDAQ,Altaba Inc
+BER,TSX Ventures,Berkshire Hathaway Inc
+HOG,NYSE,Harley-Davidson Inc
+CSCO,NASDAQ,Cisco Systems Inc
+AABA,Buenos Aires,Altaba Inc
+BP,Buenos Aires,BP PLC
+IBM,NYSE,International Business Machines Corp
+AAPL,Buenos Aires,Apple Inc
+IBM,London,International Business Machines Corp
+GM,Swiss,General Motors Co
+VMW,Germany,Vmware Inc
+UPS,Swiss,United Parel Service Inc
+WNDW,OTCQB,Solarwindow Technologies Inc
+HOG,Australia,Harley-Davidson Inc
+DIS,Xetra,Walt Disney Co
+IBM,Xetra,International Business Machines Corp
+BP,Milan,BP PLC
+BP,Swiss,BP PLC
+T,NYSE,At&t Inc
+CSCO,Mexico,Cisco Systems Inc
+VMW,NYSE,Vmware Inc
+T,Swiss,At&t Inc
+BER,NYSE,Berkshire Hathaway Inc
+VZ,NYSE,Verizon Communications Inc
+HOG,Swiss,Harley-Davidson Inc
+GM,Mexico,General Motors Co
+BER,Singapore,Berkshire Hathaway Inc
+AABA,Chile,Altaba Inc
+UPS,Mexico,United Parel Service Inc
+CSCO,Xetra,Cisco Systems Inc
+IBM,Germany,International Business Machines Corp
+AAPL,NYSE,Apple Inc
+HOG,Toronto,Harley-Davidson Inc
+UPS,Chile,United Parel Service Inc
+AABA,Mexicos,Altaba Inc
+DIS,NYSE,Walt Disney Co

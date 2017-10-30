@@ -1,58 +1,67 @@
 package labs.lab16;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 
 import utils.KeyboardReader;
-import utils.SearchAlgorithms;
 
 public class Driver {
 
     public static void main(String[] args) {
-        String[] searchTypes = {"Linear", "Binary", "Ternary", "Jump", "Interpolation", "Exponential"};
-        
+
         try (KeyboardReader keyReader = new KeyboardReader(System.in)) {
+            Company[] companies = getCompanies("Input_Stock_Tickers.txt");
+            CompanyMaintainer.sort(companies);
 
-            String filePath = keyReader.readLine("Enter file path of list: ");
-            int sizeOfList = keyReader.readPositiveInt("Enter size of list: ");
-            int[] arr = Maintainer.readFileIntoArray(filePath, sizeOfList);
+            String name = null;
+            String exchange = null;
+            do {
+                name = keyReader.readLine("Enter company (or !q to stop): ", false);
+                if (name.equalsIgnoreCase("!q"))
+                    break;
 
-            int searchValue = keyReader.readInt("Enter value to search for: ");
+                exchange = keyReader.readLine("Enter exchange (or !q to stop): ", false);
+                if (exchange.equalsIgnoreCase("!q"))
+                    break;
 
-            int counter = 0;
-            for (String type : searchTypes) {
-                System.out.println(++counter + ". " + type);
-            }
+                Company searchValue = new Company(null, exchange, name);
 
-            int selection = keyReader.readInt(1, searchTypes.length) - 1;
-            int index = -1;
-
-            long start = System.currentTimeMillis();
-            switch (selection) {
-            case 0:
-                index = SearchAlgorithms.linear(arr, searchValue);
-                break;
-            case 1:
-                index = SearchAlgorithms.binary(arr, searchValue);
-                break;
-            case 2:
-                index = SearchAlgorithms.ternary(arr, searchValue);
-                break;
-            case 3:
-                index = SearchAlgorithms.jump(arr, searchValue);
-                break;
-            case 4:
-                index = SearchAlgorithms.interpolation(arr, searchValue);
-                break;
-            case 5:
-                index = SearchAlgorithms.exponential(arr, searchValue);
-                break;
-            }
-            long end = System.currentTimeMillis();
-
-            System.out.println("Finished searching " + arr.length + " elements using " + searchTypes[selection].toLowerCase() + " search in " + (end - start) + " milliseconds.");
-            System.out.println("Index: " + (index != -1 ? index : "[element not found]"));
+                System.out.println("The matching symbol from linear search is: "
+                    + CompanyMaintainer.linearSearch(companies, searchValue));
+                System.out.println("The matching symbol from binary search is: "
+                    + CompanyMaintainer.binarySearch(companies, searchValue));
+                System.out.println("The matching symbol from ternary search is: "
+                    + CompanyMaintainer.ternarySearch(companies, searchValue));
+                System.out.println("The matching symbol from jump search is: "
+                    + CompanyMaintainer.jumpSearch(companies, searchValue));
+                System.out.println("The matching symbol from interpolation search is: "
+                    + CompanyMaintainer.interpolationSearch(companies, searchValue));
+                System.out.println("The matching symbol from exponential search is: "
+                    + CompanyMaintainer.exponentialSearch(companies, searchValue));
+                System.out.println("The matching symbol from fibonacci search is: "
+                    + CompanyMaintainer.fibonacciSearch(companies, searchValue));
+                System.out.println();
+            } while (true);
+            
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+    
+    private static Company[] getCompanies(String fileName) throws IOException {
+        Company[] companies = null;
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            int numCompanies = Integer.parseInt(br.readLine());
+            companies = new Company[numCompanies];
+
+            for (int i = 0; i < numCompanies; i++) {
+                String[] split = br.readLine().split(",");
+                companies[i] = new Company(split[0], split[1], split[2]);
+            }
+        }
+
+        return companies;
     }
 }

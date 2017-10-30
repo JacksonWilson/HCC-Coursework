@@ -15,6 +15,16 @@ public class SortAlgorithms {
         }
     }
 
+    public static <T extends Comparable<T>> void bubble(T[] arr) {
+        for (int i = 1; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - i; j++) {
+                if (arr[j].compareTo(arr[j + 1]) > 0) {
+                    swap(arr, j, j + 1);
+                }
+            }
+        }
+    }
+
     public static void bubble(int[] arr) {
         for (int i = 1; i < arr.length - 1; i++) {
             for (int j = 0; j < arr.length - i; j++) {
@@ -83,6 +93,42 @@ public class SortAlgorithms {
         return sortedList;
     }
     
+    public static <T extends Comparable<T>> void merge(T[] arr) {
+        arr = mergeRecur(arr);
+    }
+
+    private static <T extends Comparable<T>> T[] mergeRecur(T[] arr) {
+        if (arr.length == 1)
+            return arr;
+
+        T[] arr1 = Arrays.copyOfRange(arr, 0, arr.length / 2);
+        T[] arr2 = Arrays.copyOfRange(arr, arr.length / 2, arr.length);
+
+        mergeRecur(arr1);
+        mergeRecur(arr2);
+        
+        Comparable<T>[] sortedArr = new Comparable[arr1.length + arr2.length];
+        int arr1Pos = 0;
+        int arr2Pos = 0;
+        for (int i = 0; i < arr1.length + arr2.length; i++) {
+            if (arr1Pos == arr1.length) {
+                for (int j = arr2Pos; j < arr2.length; j++)
+                    sortedArr[i] = arr2[j];
+                break;
+            }
+
+            if (arr2Pos == arr2.length) {
+                for (int j = arr1Pos; j < arr1.length; j++)
+                    sortedArr[i] = arr1[j];
+                break;
+            }
+
+            sortedArr[i] = arr1[arr1Pos].compareTo(arr2[arr2Pos]) > 0 ? arr1[arr1Pos++] : arr2[arr2Pos++];
+        }
+
+        return (T[])sortedArr;
+    }
+    
     public static void merge(int[] arr) {
         arr = mergeRecur(arr);
     }
@@ -138,6 +184,34 @@ public class SortAlgorithms {
 
         for (int j = l; j < r; j++) {
             if (arr.get(j).compareTo(pivot) <= 0) {
+                i++;
+                swap(arr, i, j);
+            }
+        }
+        swap(arr, r, i + 1);
+
+        return i + 1;
+    }
+
+    public static <T extends Comparable<T>> void quick(T[] arr) {
+        quickRecur(arr, 0, arr.length - 1);
+    }
+
+    private static <T extends Comparable<T>> void quickRecur(T[] arr, int l, int r) {
+        if (l < r) {
+            int pi = quickPartition(arr, l, r);
+
+            quickRecur(arr, l, pi - 1);
+            quickRecur(arr, pi + 1, r);
+        }
+    }
+
+    private static <T extends Comparable<T>> int quickPartition(T[] arr, int l, int r) {
+        T pivot = arr[r];
+        int i = l - 1;
+
+        for (int j = l; j < r; j++) {
+            if (arr[j].compareTo(pivot) <= 0) {
                 i++;
                 swap(arr, i, j);
             }
@@ -402,6 +476,12 @@ public class SortAlgorithms {
         T temp = arr.get(i);
         arr.set(i, arr.get(i));
         arr.set(j, temp);
+    }
+
+    private static <T extends Comparable<T>> void swap(T[] arr, int i, int j) {
+        T temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 
     private static void swap(int[] arr, int i, int j) {

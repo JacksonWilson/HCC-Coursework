@@ -66,6 +66,7 @@ public class LinkedList {
             head = head.getNext();
         else {
             Node next = head;
+            
             for (int i = 0; i < index - 1; i++) {
                 next = next.getNext();
             }

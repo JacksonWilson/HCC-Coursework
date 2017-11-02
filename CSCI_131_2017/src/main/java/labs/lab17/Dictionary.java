@@ -31,7 +31,7 @@ public class Dictionary {
             if (keys[i] == key)
                 return values[i];
         }
-        return null;
+        return "Not found";
     }
 
     public void deleteEntry(int key) {
@@ -40,6 +40,7 @@ public class Dictionary {
             if (keys[i] == key) {
                 for (; i < size - 1; i++) {
                     keys[i] = keys[i + 1];
+                    values[i] = values[i + 1];
                 }
             }
         }

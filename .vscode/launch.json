@@ -1,0 +1,343 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Bases<CSCI_115_HY01_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab0.Bases",
+            "projectName": "CSCI_115_HY01_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-NumberBases<CSCI_115_HY01_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab1.NumberBases",
+            "projectName": "CSCI_115_HY01_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>",
+            "request": "launch",
+            "mainClass": "assignments.a1.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(1)",
+            "request": "launch",
+            "mainClass": "assignments.a2.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(2)",
+            "request": "launch",
+            "mainClass": "assignments.a3.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(3)",
+            "request": "launch",
+            "mainClass": "assignments.a4.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(4)",
+            "request": "launch",
+            "mainClass": "labs.lab1.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(5)",
+            "request": "launch",
+            "mainClass": "labs.lab10.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(6)",
+            "request": "launch",
+            "mainClass": "labs.lab11.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ProcessInputFile<CSCI_131_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab12.ProcessInputFile",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(7)",
+            "request": "launch",
+            "mainClass": "labs.lab13.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(8)",
+            "request": "launch",
+            "mainClass": "labs.lab14.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-DriverLinkedHashMap<CSCI_131_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab14.DriverLinkedHashMap",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CreateFileOfIntegers<CSCI_131_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab15.CreateFileOfIntegers",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(9)",
+            "request": "launch",
+            "mainClass": "labs.lab15.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(10)",
+            "request": "launch",
+            "mainClass": "labs.lab16.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(11)",
+            "request": "launch",
+            "mainClass": "labs.lab17.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(12)",
+            "request": "launch",
+            "mainClass": "labs.lab17_generic.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(13)",
+            "request": "launch",
+            "mainClass": "labs.lab2.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(14)",
+            "request": "launch",
+            "mainClass": "labs.lab3.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(15)",
+            "request": "launch",
+            "mainClass": "labs.lab4.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(16)",
+            "request": "launch",
+            "mainClass": "labs.lab5.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TestDriver<CSCI_131_2017>",
+            "request": "launch",
+            "mainClass": "labs.lab5.TestDriver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(17)",
+            "request": "launch",
+            "mainClass": "labs.lab6.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(18)",
+            "request": "launch",
+            "mainClass": "labs.lab7.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(19)",
+            "request": "launch",
+            "mainClass": "labs.lab8.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<CSCI_131_2017>(20)",
+            "request": "launch",
+            "mainClass": "labs.lab9.Driver",
+            "projectName": "CSCI_131_2017",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Comparators<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab10.Comparators",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Comparators2<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab10.Comparators2",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab11.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(1)",
+            "request": "launch",
+            "mainClass": "labs.lab12.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(2)",
+            "request": "launch",
+            "mainClass": "labs.lab13.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-GetFibonacci<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab14.GetFibonacci",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-GetFibonacciThreaded<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab14.GetFibonacciThreaded",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(3)",
+            "request": "launch",
+            "mainClass": "labs.lab15.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(4)",
+            "request": "launch",
+            "mainClass": "labs.lab4.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Hanoi<Labs>",
+            "request": "launch",
+            "mainClass": "labs.lab5.Hanoi",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(5)",
+            "request": "launch",
+            "mainClass": "labs.lab6.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(6)",
+            "request": "launch",
+            "mainClass": "labs.lab7.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(7)",
+            "request": "launch",
+            "mainClass": "labs.lab8.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Driver<Labs>(8)",
+            "request": "launch",
+            "mainClass": "labs.lab9.Driver",
+            "projectName": "Labs",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 0
+        }
+    ]
+}

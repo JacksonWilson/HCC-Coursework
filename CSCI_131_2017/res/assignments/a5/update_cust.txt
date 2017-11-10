@@ -1,0 +1,8 @@
+62357,Nuevo-aero,458257,12,I
+39521,Systems by Design,215410,10,I
+34321,Robotics Intl,743000,10,I
+55319,D
+77215,The Network Gals,110000,7,U
+84412,D
+88558,Generic Networking Solutions,50000,I
+23699,Sentient Machines,69000,U

@@ -97,6 +97,7 @@ public class SortAlgorithms {
         arr = mergeRecur(arr);
     }
 
+    @SuppressWarnings("unchecked")
     private static <T extends Comparable<T>> T[] mergeRecur(T[] arr) {
         if (arr.length == 1)
             return arr;

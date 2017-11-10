@@ -6,6 +6,7 @@ public class Dictionary<K, V> {
     private V[] values;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public Dictionary() {
         this.keys = (K[])(new Object[GROW_CONSTANT]);
         this.values = (V[])(new Object[GROW_CONSTANT]);
@@ -63,6 +64,7 @@ public class Dictionary<K, V> {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     private void grow() {
         K[] newKeys = (K[])(new Object[keys.length + GROW_CONSTANT]);
         V[] newValues = (V[])(new Object[values.length + GROW_CONSTANT]);

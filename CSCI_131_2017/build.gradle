@@ -132,7 +132,7 @@ ArrayList<Deliverable> deliverables = [
 ]
 
 task genDeliverables {
-    Deliverable deliverable = ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"], ["**/*Test.*"]]
+    Deliverable deliverable = ["CSCI131_JDBC_Wilson", "labs.lab19.Driver", ["labs/lab19/*"], ["**/*Test.*"]]
     //for (Deliverable deliverable : deliverables) {
         def de = deleteExisting(deliverable)
         def sj = specificJar(deliverable)

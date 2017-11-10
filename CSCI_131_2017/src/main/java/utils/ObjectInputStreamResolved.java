@@ -7,6 +7,13 @@ import java.io.ObjectStreamClass;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Allows for objects being read from an input stream to be redefined before being returned.
+ * Mostly used for adding a package header to incoming objects to make them compatable with
+ * the same class definition in a different package.
+ * 
+ * @author Jackson Wilson
+ */
 public class ObjectInputStreamResolved extends ObjectInputStream {
     private Map<String, Class<?>> classDefinitions;
 

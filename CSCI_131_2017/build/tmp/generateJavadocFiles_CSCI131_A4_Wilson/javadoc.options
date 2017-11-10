@@ -1,5 +1,6 @@
 -d 'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\build\\libs\\CSCI131_A4_Wilson\\doc'
 -doctitle 'CSCI_131_2017 API'
+-private 
 -quiet 
 -windowtitle 'CSCI_131_2017 API'
 'C:\\Users\\jacks\\dev\\Visual Studio Code\\Heartland\\CSCI_131_2017\\src\\main\\java\\assignments\\a4\\Driver.java'

@@ -19,13 +19,21 @@ import java.util.regex.Pattern;
 import utils.KeyboardReader;
 import utils.ObjectInputStreamResolved;
 
+/**
+ * Driver for Assignment 4 - Collections / Data structures.
+ * 
+ * @author Jackson Wilson
+ */
 public class Driver {
-    private static final String FILE_EMPLOYEE_DATA = "res/assignments/a4/Employees.dat";
-    private static final String FILE_COMPONENT_CODES = "res/assignments/a4/ComponentCodes.txt";
-    private static final String FILE_JOB_CODES = "res/assignments/a4/JobCodes.txt";
-    private static final String FILE_WORK_ORDERS = "res/assignments/a4/WorkOrders.txt";
+    private static final String FILE_EMPLOYEE_DATA = "Employees.dat";
+    private static final String FILE_COMPONENT_CODES = "ComponentCodes.txt";
+    private static final String FILE_JOB_CODES = "JobCodes.txt";
+    private static final String FILE_WORK_ORDERS = "WorkOrders.txt";
 
     private static KeyboardReader keyReader;
+    private static HashMap<String, String> componentCodes;
+    private static HashMap<String, String> jobCodes;
+    private static LinkedList<WorkOrder> workOrders;
 
     static {
         keyReader = new KeyboardReader(System.in);
@@ -33,130 +41,63 @@ public class Driver {
 
     public static void main(String[] args) {
         try {
-            ArrayList<Employee> employees = getEmployees(FILE_EMPLOYEE_DATA);
-            if (employees == null || employees.isEmpty())
+            Employee currentUser = getCurrentEmployee(FILE_EMPLOYEE_DATA);
+            if (currentUser == null)
                 return;
 
-            Employee currentUser = getCurrentEmployee(employees);
-            if (currentUser == null) {
-                System.err.println("SECURITY WARNING: FAILED TO SUPPLY VALID ID WITHIN 3 ATTEMPTS.");
-                return;
-            }
+            componentCodes = getCodeValues(FILE_COMPONENT_CODES);
+            jobCodes = getCodeValues(FILE_JOB_CODES);
+            workOrders = getWorkOrders(FILE_WORK_ORDERS);
 
-            HashMap<String, String> componentCodes = getCodeValues(FILE_COMPONENT_CODES);
-            HashMap<String, String> jobCodes = getCodeValues(FILE_JOB_CODES);
-            LinkedList<WorkOrder> workOrders = getWorkOrders(FILE_WORK_ORDERS);
-
-            String input;
             do {
                 displayMenu(currentUser.getSecurityLevel());
-                input = keyReader.readLine("Selection: ");
-                System.out.println();
+            } while (handleInput(keyReader.readLine("Selection: "), currentUser));
 
-                switch (input) {
-                case "1": createReport(currentUser, workOrders, jobCodes, componentCodes);
-                    break;
-                case "2": viewCodeValue(keyReader.readLine("Component code: "), componentCodes);
-                    break;
-                case "3": viewCodeValue(keyReader.readLine("Job code: "), jobCodes);
-                    break;
-                case "4":
-                    if (currentUser.getSecurityLevel().equals("View only"))
-                        System.out.println("Please select a number from the list.");
-                    else
-                        createNewWorkOrder(workOrders, jobCodes, componentCodes);
-                    break;
-                case "5": {
-                    if (currentUser.getSecurityLevel().equals("Edit"))
-                        createNewCodeValue(keyReader.readLine("Component code: ", false), componentCodes);
-                    else
-                        System.out.println("Please select a number from the list.");
-                    break;
-                }
-                case "6": {
-                    if (currentUser.getSecurityLevel().equals("Edit"))
-                        removeCodeValue(keyReader.readLine("Component code: "), componentCodes);
-                    else
-                        System.out.println("Please select a number from the list.");
-                    break;
-                }
-                case "7": {
-                    if (currentUser.getSecurityLevel().equals("Edit"))
-                        updateCodeValue(keyReader.readLine("Component code: "), componentCodes);
-                    else
-                        System.out.println("Please select a number from the list.");
-                    break;
-                }
-                case "9": {
-                    switch (currentUser.getSecurityLevel()) {
-                    case "Edit":
-                        saveCodeValues(jobCodes, FILE_JOB_CODES);
-                        saveCodeValues(componentCodes, FILE_COMPONENT_CODES);
-                    case "Partial edit":
-                        saveWorkOrders(workOrders, FILE_WORK_ORDERS);
-                    }
-                    break;
-                }
-                default: System.out.println("Please select a number from the list.");
-                    break;
-                }
-            } while (!input.equals("9"));
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
-    
-    private static ArrayList<Employee> getEmployees(String filePath) {
+
+    /**
+     * Retrieves all of the employee objects stored in the .dat file.
+     * 
+     * @param filePath The path to the .dat file.
+     * @return An array of all of the employees.
+     * @throws IOException If the file could not be read.
+     * @throws ClassNotFoundException If the readObject method could not find a suitable class definition for the Employee objects.
+     */
+    private static ArrayList<Employee> getEmployees(String filePath) throws IOException, ClassNotFoundException {
         ArrayList<Employee> employees = new ArrayList<>();
 
         try (ObjectInputStreamResolved oisr = new ObjectInputStreamResolved(new FileInputStream(filePath))) {
-            oisr.putClassDefinition("Employee", assignments.a4.Employee.class);
+            oisr.putClassDefinition("Employee", assignments.a4.Employee.class); // Add the package header to the incoming employee objects.
             Employee employee;
 
             while ((employee = (Employee)oisr.readObject()) != null) {
                 employees.add(employee);
             }
 
-        } catch (EOFException eofe) {
-
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-        }
+        } catch (EOFException eofe) {}
         
         return employees;
     }
 
-    private static HashMap<String, String> getCodeValues(String filePath) throws IOException {
-        HashMap<String, String> codes = new HashMap<>();
+    /**
+     * Prompts the user for a valid ID to get the current employee.
+     * 
+     * @param filePath The path to the .dat file.
+     * @return The current employee based on the inputted ID or null if a valid ID was not supplied.
+     * @throws IOException If there was an exception when working with files or user input.
+     * @throws ClassNotFoundException If the readObject method could not find a suitable class definition for the Employee objects.
+     */
+    private static Employee getCurrentEmployee(String filePath) throws IOException, ClassNotFoundException {
+        ArrayList<Employee> employees = getEmployees(filePath);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] split = line.split(",");
-                codes.put(split[0], split[1]);
-            }
+        if (employees == null || employees.isEmpty()) {
+            System.err.println("Could not load any employees.");
+            return null;
         }
-
-        return codes;
-    }
-
-    private static LinkedList<WorkOrder> getWorkOrders(String filePath) throws IOException {
-        LinkedList<WorkOrder> workOrders = new LinkedList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String order;
-            while ((order = br.readLine()) != null) {
-                String[] orderInfo = order.split(",");
-                workOrders.add(new WorkOrder(orderInfo[0], orderInfo[1], orderInfo[2]));
-            }
-        }
-
-        return workOrders;
-    }
-
-    private static Employee getCurrentEmployee(ArrayList<Employee> employees) throws IOException {
+        
         String id;
         int attempts = 0;
         Employee currentEmployee = null;
@@ -171,9 +112,59 @@ public class Driver {
             }
         } while (currentEmployee == null && attempts < 3);
 
+        if (currentEmployee == null)
+            System.err.println("SECURITY WARNING: FAILED TO SUPPLY VALID ID WITHIN 3 ATTEMPTS.");
+
         return currentEmployee;
     }
-    
+
+    /**
+     * Gets the code values from a file.
+     * 
+     * @param filePath The file path to the code values.
+     * @return A map of the code values.
+     * @throws IOException If the file could not be read.
+     */
+    private static HashMap<String, String> getCodeValues(String filePath) throws IOException {
+        HashMap<String, String> codes = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] split = line.split(",");
+                codes.put(split[0], split[1]);
+            }
+        }
+
+        return codes;
+    }
+
+    /**
+     * Gets the work orders from a file.
+     * 
+     * @param filePath The file path to the work orders.
+     * @return A linked list of work orders.
+     * @throws IOException If the file could not be read.
+     */
+    private static LinkedList<WorkOrder> getWorkOrders(String filePath) throws IOException {
+        LinkedList<WorkOrder> workOrders = new LinkedList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String order;
+            while ((order = br.readLine()) != null) {
+                String[] orderInfo = order.split(",");
+                workOrders.add(new WorkOrder(orderInfo[0], orderInfo[1], orderInfo[2]));
+            }
+        }
+
+        return workOrders;
+    }
+
+    /**
+     * Displays the menu based on a specified security level.
+     * 
+     * @param securityLevel The security level of the current employee.
+     */
     private static void displayMenu(String securityLevel) {
         System.out.println();
         System.out.println("1. Create work order report");
@@ -190,10 +181,65 @@ public class Driver {
             }
         }
         System.out.println("9. Exit");
+        System.out.println();
     }
 
-    private static void createReport(Employee currentUser, LinkedList<WorkOrder> workOrders, HashMap<String, String> jobCodes, HashMap<String, String> componentCodes) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("WorkOrder" + (getReportNumber()) + ".txt"))) {
+    /**
+     * Handle the user's input.
+     * 
+     * @param input The user's selection.
+     * @param currentUser The current employee.
+     * @return Whether to prompt the user for another selection.
+     * @throws IOException If there was an exception when working with files or user input.
+     */
+    private static boolean handleInput(String input, Employee currentUser) throws IOException {
+        switch (input) {
+        case "1": createReport(currentUser);
+            break;
+        case "2": viewCodeValue(keyReader.readLine("Component code: "), componentCodes);
+            break;
+        case "3": viewCodeValue(keyReader.readLine("Job code: "), jobCodes);
+            break;
+        case "4": {
+            if (!currentUser.getSecurityLevel().equals("View only"))
+                createNewWorkOrder();
+            else
+                System.out.println("Please select a number from the list.");
+            break;
+        }
+        case "9": {
+            saveFiles(currentUser.getSecurityLevel());
+            return false;
+        }
+        default: {
+            if (currentUser.getSecurityLevel().equals("Edit")) {
+                switch (input) {
+                case "5": createComponent(keyReader.readLine("Component code: ", false));
+                    break;
+                case "6": removeComponent(keyReader.readLine("Component code: "));
+                    break;
+                case "7": updateComponent(keyReader.readLine("Component code: "));
+                    break;
+                default: System.out.println("Please select a number from the list.");
+                    break;
+                }
+            } else {
+                System.out.println("Please select a number from the list.");
+            }
+            break;
+        }
+        }
+        return true;
+    }
+
+    /**
+     * Creates a work order report.
+     * 
+     * @param currentUser The current employee requesting to create a report.
+     * @throws IOException If there was an exception when writing to the file.
+     */
+    private static void createReport(Employee currentUser) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("WorkOrder" + (getNextReportNumber()) + ".txt"))) {
             bw.write("Name: ");
             bw.write(currentUser.getName());
             bw.newLine();
@@ -225,10 +271,16 @@ public class Driver {
                 bw.write("]");
                 bw.newLine();
             }
-            System.out.println("Created report.");
         }
+        System.out.println("Created report.");
     }
-    
+
+    /**
+     * Displays the code's value if it exists, or prompts otherwise.
+     * 
+     * @param code A code to be looked up.
+     * @param codes The map of codes used to look up the value.
+     */
     private static void viewCodeValue(String code, HashMap<String, String> codes) {
         if (codes.containsKey(code)) {
             System.out.println(code + " - " + codes.get(code));
@@ -237,66 +289,126 @@ public class Driver {
         }
     }
 
-    private static void updateCodeValue(String code, HashMap<String, String> codes) throws IOException {
-        if (codes.containsKey(code)) {
-            System.out.println("Component: " + code + " [" + codes.get(code) + "]");
-            String description = keyReader.readLine("New description: ");
-            System.out.println("Updated component: " + code + " [" + codes.put(code, description) + "] -> [" + description + "]");
-        } else {
-            System.out.println("Code does not exist: " + code);
+    /**
+     * Creates a new work order based on user input.
+     * 
+     * @return Whether a new work order was created or not.
+     * @throws IOException If there was an exception when getting user input.
+     */
+    private static boolean createNewWorkOrder() throws IOException {
+        String orderNumber = keyReader.readLine("Order number: ");
+        String jobCode = keyReader.readLine("Job code: ");
+        String componentCode = keyReader.readLine("Component code: ");
+
+        boolean valid = true;
+
+        for (WorkOrder order : workOrders) {
+            if (orderNumber.equals(order.getOrderNumber())) {
+                System.out.println("Work order number already exists.");
+                valid = false;
+                break;
+            }
         }
+
+        if (!jobCodes.containsKey(jobCode)) {
+            System.out.println("Invalid job code: " + jobCode);
+            valid = false;
+        }
+
+        if (!componentCodes.containsKey(componentCode)) {
+            System.out.println("Invalid component code: " + componentCode);
+            valid = false;
+        }
+
+        if (valid) {
+            WorkOrder newOrder = new WorkOrder(orderNumber, jobCode, componentCode);
+            valid = workOrders.add(newOrder);
+
+            if (valid) {
+                System.out.println("Added order: " + newOrder.getOrderNumber()
+                    + " Job: " + newOrder.getJobCode()
+                    + " [" + jobCodes.get(newOrder.getJobCode())
+                    + "] Component: " + newOrder.getComponentCode()
+                    + " [" + componentCodes.get(newOrder.getComponentCode()) + "]");
+            }
+        }
+        
+        if (!valid) {
+            System.out.println("Failed to create new order.");
+        }
+
+        return valid;
     }
 
-    private static void removeCodeValue(String code, HashMap<String, String> codes) {
-        if (codes.containsKey(code)) {
-            System.out.println("Removed: " + code + " [" + codes.remove(code) + "]");
-        } else {
-            System.out.println("Code does not exist: " + code);
-        }
-    }
-
-    private static void createNewCodeValue(String code, HashMap<String, String> codes) throws IOException {
-        if (codes.containsKey(code)) {
-            System.out.println("Code already exists: " + code + " [" + codes.get(code) + "]");
+    /**
+     * Creates a new component if the supplied code does not already map to a component.
+     * 
+     * @param componentCode The code of the new component.
+     * @throws IOException If there was an exception when getting user input.
+     */
+    private static void createComponent(String componentCode) throws IOException {
+        if (componentCodes.containsKey(componentCode)) {
+            System.out.println("Code already exists: " + componentCode + " [" + componentCodes.get(componentCode) + "]");
         } else {
             String description = keyReader.readLine("Description: ");
-            codes.put(code, description);
-            System.out.println("Added: " + code + " [" + description + "]");
+            componentCodes.put(componentCode, description);
+            System.out.println("Added: " + componentCode + " [" + description + "]");
+        }
+    }
+    
+    /**
+     * Removes a component if there is a value mapped.
+     * 
+     * @param componentCode The code of the component to be removed.
+     */
+    private static void removeComponent(String componentCode) {
+        if (componentCodes.containsKey(componentCode)) {
+            System.out.println("Removed: " + componentCode + " [" + componentCodes.remove(componentCode) + "]");
+        } else {
+            System.out.println("Code does not exist: " + componentCode);
         }
     }
 
-    private static void createNewWorkOrder(LinkedList<WorkOrder> workOrders, HashMap<String, String> jobCodes, HashMap<String, String> componentCodes) throws IOException {
-        String orderNumber;
-        do {
-            orderNumber = keyReader.readLine("Order number: ");
-            for (WorkOrder order : workOrders) {
-                if (orderNumber.equals(order.getOrderNumber())) {
-                    System.out.println("Number already exists.");
-                    orderNumber = null;
-                    break;
-                }
-            }
-        } while (orderNumber == null);
-
-        String jobCode;
-        while (!jobCodes.containsKey(jobCode = keyReader.readLine("Job code: ")))
-            System.out.println("Invalid code: " + jobCode);
-
-        String componentCode;
-        while (!componentCodes.containsKey(componentCode = keyReader.readLine("Component code: ")))
-            System.out.println("Invalid code: " + componentCode);
-
-        WorkOrder newOrder = new WorkOrder(orderNumber, jobCode, componentCode);
-        workOrders.add(newOrder);
-
-        System.out.println("Added Order: " + newOrder.getOrderNumber()
-            + " Job: " + newOrder.getJobCode()
-            + " [" + jobCodes.get(newOrder.getJobCode())
-            + "] Component: " + newOrder.getComponentCode()
-            + " [" + componentCodes.get(newOrder.getComponentCode()) + "]");
+    /**
+     * Updates a component description if the code exists.
+     * 
+     * @param componentCode The code of the component to be updated.
+     * @throws IOException If there was an exception when getting user input.
+     */
+    private static void updateComponent(String componentCode) throws IOException {
+        if (componentCodes.containsKey(componentCode)) {
+            System.out.println("Component: " + componentCode + " [" + componentCodes.get(componentCode) + "]");
+            String description = keyReader.readLine("New description: ");
+            System.out.println("Updated component: " + componentCode + " [" + componentCodes.put(componentCode, description) + "] -> [" + description + "]");
+        } else {
+            System.out.println("Code does not exist: " + componentCode);
+        }
     }
 
-    private static void saveCodeValues(HashMap<String, String> codes, String filePath) throws IOException {
+    /**
+     * Saves the current instances of the collections based on the security level.
+     * 
+     * @param securityLevel The security level to determine which files can be saved.
+     * @throws IOException If there was an exception when saving the files.
+     */
+    private static void saveFiles(String securityLevel) throws IOException {
+        switch (securityLevel) {
+        case "Edit":
+            saveCodes(jobCodes, FILE_JOB_CODES);
+            saveCodes(componentCodes, FILE_COMPONENT_CODES);
+        case "Partial edit":
+            saveWorkOrders(FILE_WORK_ORDERS);
+        }
+    }
+
+    /**
+     * Saves the current instance of code values.
+     * 
+     * @param codes The map of code values to save.
+     * @param filePath The file path to save/override the current code values.
+     * @throws IOException If there was an exception when saving the files.
+     */
+    private static void saveCodes(HashMap<String, String> codes, String filePath) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (Map.Entry<String, String> entry : codes.entrySet()) {
                 bw.write(entry.getKey() + "," + entry.getValue());
@@ -305,7 +417,13 @@ public class Driver {
         }
     }
     
-    private static void saveWorkOrders(LinkedList<WorkOrder> workOrders, String filePath) throws IOException {
+    /**
+     * Saves the current instance of work orders.
+     * 
+     * @param filePath The file path to save/override the current work orders.
+     * @throws IOException If there was an exception when writing to the file.
+     */
+    private static void saveWorkOrders(String filePath) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
             for (WorkOrder order : workOrders) {
                 bw.write(order.getOrderNumber() + "," + order.getJobCode() + "," + order.getComponentCode());
@@ -314,10 +432,12 @@ public class Driver {
         }
     }
 
-    /*
-     * Finds the next report number in the current directory.
+    /**
+     * Gets the next work order report number in the current directory.
+     * 
+     * @return The next report number.
      */
-    private static int getReportNumber() {
+    private static int getNextReportNumber() {
         File[] listFiles = new File(".").listFiles();
         int reportNum = 0;
         Pattern reportPattern = Pattern.compile("WorkOrder\\d+.txt");

@@ -16,6 +16,11 @@ jar {
     manifest.attributes 'Main-Class': mainClassName
 }
 
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
 class Deliverable {
     private def name;
     private def entry;
@@ -95,6 +100,7 @@ def generateJavadocFiles(deliverable) {
     return tasks.create(name: "generateJavadocFiles_${deliverable.getName()}", type: Javadoc) {
         destinationDir = file("$rootDir/build/libs/${deliverable.getName()}/doc")
         source = sourceSets.main.allJava
+        options.memberLevel = JavadocMemberLevel.PRIVATE
         (deliverable.getIncludes()).each { i -> include i }
         (deliverable.getExcludes()).each { e -> exclude e }
         failOnError false
@@ -126,7 +132,7 @@ ArrayList<Deliverable> deliverables = [
 ]
 
 task genDeliverables {
-    Deliverable deliverable = new Deliverable("CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"])
+    Deliverable deliverable = ["CSCI131_A4_Wilson", "assignments.a4.Driver", ["assignments/a4/*", "utils/KeyboardReader.*", "utils/ObjectInputStreamResolved.*"], ["**/*Test.*"]]
     //for (Deliverable deliverable : deliverables) {
         def de = deleteExisting(deliverable)
         def sj = specificJar(deliverable)

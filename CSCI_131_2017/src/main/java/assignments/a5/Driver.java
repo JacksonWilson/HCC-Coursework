@@ -15,14 +15,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import utils.KeyboardReader;
+
 public class Driver {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMdd");
     private static final String FILE_DATABASE = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/CompanyReport.accdb";
     private static final String FILE_CUST = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/update_cust.txt";
     private static final String FILE_EMPL = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/update_emp.txt";
     private static final String FILE_ERROR = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/db_update_errors.txt";
+    
+    private static KeyboardReader keyReader;
 
-    private static void processCustUpdates(Connection connection, File custUpdateFile, File errorFile) throws IOException, SQLException {
+    static {
+        keyReader = new KeyboardReader(System.in);
+    }
+
+    private static int processCustUpdates(Connection connection, File custUpdateFile, File errorFile) throws IOException, SQLException {
+        int numErrorRecords = 0;
         try (BufferedWriter bwErrorFile = new BufferedWriter(new FileWriter(errorFile, true))) {
             PreparedStatement pstmInsertCust = connection.prepareStatement("INSERT INTO Customers (Cust_ID, Company, Revenue_Group, Years) VALUES (?, ?, ?, ?)");
             PreparedStatement pstmUpdateCust = connection.prepareStatement("UPDATE Customers SET Cust_ID=?, Company=?, Revenue_Group=?, Years=? WHERE Cust_ID=?");
@@ -47,12 +56,15 @@ public class Driver {
                 if (!success) {
                     bwErrorFile.write(String.join(",", u));
                     bwErrorFile.newLine();
+                    numErrorRecords++;
                 }
             }
         }
+        return numErrorRecords;
     }
 
-    private static void processEmplUpdates(Connection connection, File emplUpdateFile, File errorFile) throws IOException, SQLException {
+    private static int processEmplUpdates(Connection connection, File emplUpdateFile, File errorFile) throws IOException, SQLException {
+        int numErrorRecords = 0;
         try (BufferedWriter bwErrorFile = new BufferedWriter(new FileWriter(errorFile, true))) {
             PreparedStatement pstmInsertEmpl = connection.prepareStatement("INSERT INTO Employees (Empl_ID, Last_Name, First_Name, Years_Service, State_Represented, Primary_Cust_ID, Secondary_Cust_ID) VALUES (?, ?, ?, ?, ?, ?, ?)");
             PreparedStatement pstmUpdateEmpl = connection.prepareStatement("UPDATE Employees SET Empl_ID=?, Last_Name=?, First_Name=?, Years_Service=?, State_Represented=?, Primary_Cust_ID=?, Secondary_Cust_ID=? WHERE Empl_ID=?");
@@ -80,9 +92,11 @@ public class Driver {
                 if (!success) {
                     bwErrorFile.write(String.join(",", u));
                     bwErrorFile.newLine();
+                    numErrorRecords++;
                 }
             }
         }
+        return numErrorRecords;
     }
 
     public static void main(String[] args) {
@@ -91,19 +105,157 @@ public class Driver {
             if (errorFile.exists())
                 try (FileWriter fw = new FileWriter(errorFile)) {} // Clear error file if it exists.
 
+            ArrayList<File> processedFiles = new ArrayList<>();
+            int numErrorRecords = 0;
+
             File custUpdateFile = new File(FILE_CUST);
-            if (custUpdateFile.exists())
-                processCustUpdates(connection, custUpdateFile, errorFile);
+            if (custUpdateFile.exists()) {
+                numErrorRecords += processCustUpdates(connection, custUpdateFile, errorFile);
+                processedFiles.add(custUpdateFile);
+            }
 
             File emplUpdateFile = new File(FILE_EMPL);
-            if (emplUpdateFile.exists())
-                processEmplUpdates(connection, emplUpdateFile, errorFile);
+            if (emplUpdateFile.exists()) {
+                numErrorRecords += processEmplUpdates(connection, emplUpdateFile, errorFile);
+                processedFiles.add(emplUpdateFile);
+            }
 
-            
-
+            PreparedStatement pstmSelectEmpl = connection.prepareStatement("SELECT * FROM Employees WHERE Empl_ID=?");
+            PreparedStatement pstmSelectRegionFromState = connection.prepareStatement("SELECT Region FROM Regions WHERE State=?");
+            PreparedStatement pstmSelectCompanyFromId = connection.prepareStatement("SELECT * FROM Employees WHERE Empl_ID=?");
+            PreparedStatement pstmSelectCust = connection.prepareStatement("SELECT * FROM Customers WHERE Cust_ID=?");
+            PreparedStatement pstmSelectEmployeeFromCustId = connection.prepareStatement("SELECT Last_Name, First_Name FROM Employees WHERE (Primary_Cust_ID=? OR Secondary_Cust_ID=?)");
+            PreparedStatement pstmSelectRegions = connection.prepareStatement("SELECT * FROM Regions");
+            PreparedStatement pstmSelectRevenueRange = connection.prepareStatement("SELECT Low, High FROM Revenue_Groups WHERE Group=?");
+            int numEmployeeRecords = 0;
+            int selection;
+            do  {
+                switch (selection = getUserSelection()) {
+                case 1:
+                    displayEmployeeInfo(connection, pstmSelectEmpl, pstmSelectRegionFromState, pstmSelectCompanyFromId);
+                    break;
+                case 2:
+                    displayCustomerInfo(connection, pstmSelectCust, pstmSelectRevenueRange, pstmSelectEmployeeFromCustId);
+                    break;
+                case 3:
+                    displayRegions(connection);
+                    break;
+                case 4:
+                    generateEmployeeReport(connection);
+                    numEmployeeRecords++;
+                    break;
+                case 5:
+                    generateLog(processedFiles, numErrorRecords, numEmployeeRecords);
+                    break;
+                }
+                System.out.println();
+            } while (selection != 5);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void displayEmployeeInfo(Connection connection, PreparedStatement pstmSelectEmpl, PreparedStatement pstmSelectRegionFromState, PreparedStatement pstmSelectCompanyFromId) throws SQLException, IOException {
+        String emplId = keyReader.readLine("Employee ID: ");
+        pstmSelectEmpl.setString(1, emplId);
+        ResultSet results = pstmSelectEmpl.executeQuery();
+        if (results.next()) {
+            System.out.printf("First Name: %s, Last Name: %s, Region: %s, Primary Customer Name: %s, Has Secondary Customer: %s\n",
+                    results.getString("First_Name"),
+                    results.getString("Last_Name"),
+                    getRegionFromState(results.getString("State_Represented"), pstmSelectRegionFromState),
+                    getCustomerName(results.getString("Primary_Cust_ID"), pstmSelectCompanyFromId),
+                    results.getString("Secondary_Cust_ID").equals("0") ? "No" : "Yes"
+                );
+        } else {
+            System.out.println("No employee associated with ID: " + emplId);
+        }
+    }
+
+    private static String getRegionFromState(String state, PreparedStatement pstmSelectRegionFromState) throws SQLException {
+        pstmSelectRegionFromState.setString(1, state);
+        ResultSet results = pstmSelectRegionFromState.executeQuery();
+        return results.next() ? results.getString("Region") : "n/a";
+    }
+
+    private static String getCustomerName(String custId, PreparedStatement pstmSelectCompanyFromId) throws SQLException {
+        pstmSelectCompanyFromId.setString(1, custId);
+        ResultSet results = pstmSelectCompanyFromId.executeQuery();
+        return results.next() ? results.getString("Company") : "n/a";
+    }
+
+    private static void displayCustomerInfo(Connection connection, PreparedStatement pstmSelectCust, PreparedStatement pstmSelectRevenueRange, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException, IOException {
+        String custId = keyReader.readLine("Customer ID: ");
+        pstmSelectCust.setString(1, custId);
+        ResultSet results = pstmSelectCust.executeQuery();
+        if (results.next()) {
+            System.out.printf("Company Name: %s, Revenue range: %s, Years: %s, Associated Employee: %s\n",
+                    results.getString("Company"),
+                    getRevenueRangeStr(results.getString("Revenue_Group"), pstmSelectRevenueRange),
+                    results.getString("Years"),
+                    getAssociatedEmployee(custId, pstmSelectEmployeeFromCustId)
+                );
+        } else {
+            System.out.println("No customer associated with ID: " + custId);
+        }
+    }
+
+    private static String getRevenueRangeStr(String revenueGroup, PreparedStatement pstmSelectRevenueRange) throws SQLException {
+        pstmSelectRevenueRange.setString(1, revenueGroup);
+        ResultSet results = pstmSelectRevenueRange.executeQuery();
+        if (results.next()) {
+            StringBuilder sb = new StringBuilder()
+                .append("$")
+                .append(results.getString("Low"))
+                .append(" - $")
+                .append(results.getString("High").equals("0") ? "-" : results.getString("High"));
+            return sb.toString();
+        }
+        return "n/a";
+    }
+
+    private static String getAssociatedEmployee(String custId, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException {
+        pstmSelectEmployeeFromCustId.setString(1, custId);
+        pstmSelectEmployeeFromCustId.setString(2, custId);
+        ResultSet results = pstmSelectEmployeeFromCustId.executeQuery();
+        return results.next() ? results.getString("First_Name") + " " + results.getString("Last_Name") : "n/a";
+    }
+
+    private static void displayRegions(Connection connection) {
+
+    }
+
+    private static void generateEmployeeReport(Connection connection) {
+
+    }
+
+    private static void generateLog(ArrayList<File> processedFiles, int numErrorRecords, int numEmployeeRecords) throws IOException {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("log.txt"))) {
+            bw.write("Processed Files:");
+            bw.newLine();
+            for (File f : processedFiles) {
+                bw.write(f.getName());
+                bw.newLine();
+            }
+            bw.newLine();
+            bw.write("Number of error records: ");
+            bw.write(Integer.toString(numErrorRecords));
+            bw.newLine();
+            bw.write("Number of reports generated: ");
+            bw.write(Integer.toString(numEmployeeRecords));
+            bw.newLine();
+        }
+    }
+
+    private static int getUserSelection() throws IOException {
+        StringBuilder prompt = new StringBuilder()
+            .append("1. Display employee information\n")
+            .append("2. Display customer information\n")
+            .append("3. Display regions\n")
+            .append("4. Produce employee report\n")
+            .append("5. Exit\n")
+            .append("Selection: ");
+        return keyReader.readInt(1, 5, prompt.toString());
     }
 
     private static ArrayList<String[]> getUpdateList(File updateFile) throws IOException {

@@ -9,7 +9,7 @@ import java.sql.Statement;
 import utils.KeyboardReader;
 
 public class Driver {
-    private static String FILE_CAR_DATABASE = "C:/Users/02104/repos/HCC-Coursework/CSCI_131_2017/res/labs/lab19CarTracker.accdb";
+    private static final String FILE_CAR_DATABASE = "C:/Users/02104/repos/HCC-Coursework/CSCI_131_2017/res/labs/lab19CarTracker.accdb";
     private static KeyboardReader keyReader;
 
     static {

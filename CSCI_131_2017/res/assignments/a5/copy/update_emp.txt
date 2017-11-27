@@ -1,0 +1,6 @@
+29337,Ressino,Mark,8,2,IL,34321,0,I
+19047,Sorensic,Grace,10,7,NY,83662,23699,I
+66215,Mason,Jack,0,15,TX,84000,0,U
+70222,D
+92514,D
+33663,Jacobson,Valerie,2,2,AR,0,10247,I

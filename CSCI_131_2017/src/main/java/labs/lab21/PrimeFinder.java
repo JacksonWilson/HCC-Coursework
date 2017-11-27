@@ -2,7 +2,7 @@ package labs.lab21;
 
 import java.util.ArrayList;
 
-public class PrimeFinder implements Runnable {
+public class PrimeFinder extends Thread {
     private int minValue;
     private int maxValue;
     private ArrayList<Integer> primes;
@@ -22,7 +22,7 @@ public class PrimeFinder implements Runnable {
     }
 
     public boolean isPrime(int n) {
-        for (int i = 2; i < (int)Math.sqrt(n); i++) {
+        for (int i = 2; i <= (int)Math.sqrt(n); i++) {
             if (n % i == 0)
                 return false;
         }

@@ -2,12 +2,12 @@ package labs.lab21;
 
 import java.util.ArrayList;
 
-public class PrimeFinder extends Thread {
+public class PrimeFinderRunnable implements Runnable {
     private int minValue;
     private int maxValue;
     private ArrayList<Integer> primes;
 
-    public PrimeFinder(int minValue, int maxValue) {
+    public PrimeFinderRunnable(int minValue, int maxValue) {
         this.minValue = minValue;
         this.maxValue = maxValue;
         primes = new ArrayList<>();

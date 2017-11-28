@@ -2,6 +2,7 @@ package labs.lab21;
 
 import java.util.ArrayList;
 
+
 public class PrimeFinder implements Runnable {
     private int minValue;
     private int maxValue;

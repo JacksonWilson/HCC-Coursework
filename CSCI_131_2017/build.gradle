@@ -128,7 +128,12 @@ ArrayList<Deliverable> deliverables = [
     ["CSCI131_Comparing_Wilson", "labs.lab13.Driver", ["labs/lab13/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
     ["CSCI131_Collections_1_Wilson", "labs.lab14.Driver", ["labs/lab14/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
     ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*", "utils/SortAlgorithms.*"], ["**/*Test.*"]],
-    ["CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*", "utils/SortAlgorithms.*"], ["**/*Test.*"]],
+    ["CSCI131_Searching_Wilson", "labs.lab16.Driver", ["labs/lab16/*", "utils/KeyboardReader.*", "utils/SearchAlgorithms.*"], ["**/*Test.*"]],
+    ["CSCI131_DataStructures_Wilson", "labs.lab17.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_JDBC_Wilson", "labs.lab19.Driver", ["labs/lab19/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_BinaryTrees_Wilson", "labs.lab20.Driver", ["labs/lab20/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Threads_1_Wilson", "labs.lab21.Driver", ["labs/lab21/*"], ["**/*Test.*"]],
     ["CSCI131_Threads_2_Wilson", "labs.lab22.Driver", ["labs/lab22/*"], ["**/*Test.*"]]
 ]
 

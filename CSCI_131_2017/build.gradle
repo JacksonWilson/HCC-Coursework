@@ -10,7 +10,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-mainClassName = 'labs.lab1.Driver'
+mainClassName = 'labs.lab22.Driver'
 
 jar {
     manifest.attributes 'Main-Class': mainClassName
@@ -127,12 +127,13 @@ ArrayList<Deliverable> deliverables = [
     ["CSCI131_MidtermReview_Wilson", "labs.lab12.ProcessInputFile", ["labs/lab12/*"], ["**/*Test.*"]],
     ["CSCI131_Comparing_Wilson", "labs.lab13.Driver", ["labs/lab13/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
     ["CSCI131_Collections_1_Wilson", "labs.lab14.Driver", ["labs/lab14/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
-    ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
-    ["CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"]]
+    ["CSCI131_Collections_1_LHM_Wilson", "labs.lab14.DriverLinkedHashMap", ["labs/lab14/*", "utils/KeyboardReader.*", "utils/SortAlgorithms.*"], ["**/*Test.*"]],
+    ["CSCI131_Sorting_Wilson", "labs.lab15.Driver", ["labs/lab15/*", "utils/KeyboardReader.*"], ["**/*Test.*"]],
+    ["CSCI131_Threads_2_Wilson", "labs.lab22.Driver", ["labs/lab22/*"], ["**/*Test.*"]]
 ]
 
 task genDeliverables {
-    Deliverable deliverable = ["CSCI131_JDBC_Wilson", "labs.lab19.Driver", ["labs/lab19/*"], ["**/*Test.*"]]
+    Deliverable deliverable = ["CSCI131_Threads_2_Wilson", "labs.lab22.Driver", ["labs/lab22/*"], ["**/*Test.*"]]
     //for (Deliverable deliverable : deliverables) {
         def de = deleteExisting(deliverable)
         def sj = specificJar(deliverable)

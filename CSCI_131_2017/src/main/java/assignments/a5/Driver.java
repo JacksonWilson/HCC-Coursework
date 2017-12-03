@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,13 +24,68 @@ public class Driver {
     private static final String FILE_CUST = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/update_cust.txt";
     private static final String FILE_EMPL = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/update_emp.txt";
     private static final String FILE_ERROR = "C:/Users/jacks/dev/Visual Studio Code/Assignment5/res/assignments/a5/db_update_errors.txt";
-    
+
     private static KeyboardReader keyReader;
 
     static {
         keyReader = new KeyboardReader(System.in);
     }
 
+    public static void main(String[] args) {
+        try (Connection connection = DriverManager.getConnection("jdbc:ucanaccess://" + FILE_DATABASE)) {
+            File errorFile = new File(FILE_ERROR);
+
+            ArrayList<File> processedFiles = new ArrayList<>();
+            int numErrorRecords = 0;
+
+            File custUpdateFile = new File(FILE_CUST);
+            if (custUpdateFile.exists()) {
+                numErrorRecords += processCustUpdates(connection, custUpdateFile, errorFile);
+                processedFiles.add(custUpdateFile);
+            }
+
+            File emplUpdateFile = new File(FILE_EMPL);
+            if (emplUpdateFile.exists()) {
+                numErrorRecords += processEmplUpdates(connection, emplUpdateFile, errorFile);
+                processedFiles.add(emplUpdateFile);
+            }
+
+            Statement statement = connection.createStatement();
+            PreparedStatement pstmSelectEmpl = connection.prepareStatement("SELECT * FROM Employees WHERE Empl_ID=?");
+            PreparedStatement pstmSelectRegionFromState = connection.prepareStatement("SELECT Region FROM Regions WHERE State=?");
+            PreparedStatement pstmSelectCompanyFromId = connection.prepareStatement("SELECT Company FROM Customers WHERE Cust_ID=?");
+            PreparedStatement pstmSelectCust = connection.prepareStatement("SELECT * FROM Customers WHERE Cust_ID=?");
+            PreparedStatement pstmSelectEmployeeFromCustId = connection.prepareStatement("SELECT Last_Name, First_Name FROM Employees WHERE (Primary_Cust_ID=? OR Secondary_Cust_ID=?)");
+            PreparedStatement pstmSelectRevenueRange = connection.prepareStatement("SELECT Low, High FROM Revenue_Groups WHERE Revenue_Groups.Group=?");
+            
+            int numEmployeeRecords = 0;
+            int selection;
+            do  {
+                switch (selection = getUserSelection()) {
+                case 1:
+                    displayEmployeeInfo(pstmSelectEmpl, pstmSelectRegionFromState, pstmSelectCompanyFromId);
+                    break;
+                case 2:
+                    displayCustomerInfo(pstmSelectCust, pstmSelectRevenueRange, pstmSelectEmployeeFromCustId);
+                    break;
+                case 3:
+                    displayRegions(statement);
+                    break;
+                case 4:
+                    generateEmployeeReport(statement);
+                    numEmployeeRecords++;
+                    break;
+                case 5:
+                    generateLog(processedFiles, numErrorRecords, numEmployeeRecords);
+                    break;
+                }
+                System.out.println();
+            } while (selection != 5);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     private static int processCustUpdates(Connection connection, File custUpdateFile, File errorFile) throws IOException, SQLException {
         int numErrorRecords = 0;
         try (BufferedWriter bwErrorFile = new BufferedWriter(new FileWriter(errorFile, true))) {
@@ -39,7 +95,7 @@ public class Driver {
             PreparedStatement pstmSelectCust = connection.prepareStatement("SELECT Cust_ID FROM Customers WHERE Cust_ID=?");
             PreparedStatement pstmDeleteCust = connection.prepareStatement("DELETE FROM Customers WHERE CUST_ID=?");
             PreparedStatement pstmSelectRevenueGroup = connection.prepareStatement("SELECT Revenue_Groups.Group FROM Revenue_Groups WHERE Revenue_Groups.Low<=?");
-
+            
             for (String[] u : getUpdateList(custUpdateFile)) { // u = custId, companyName, revenueAmount, years, maintenanceId
                 boolean success = false;
                 
@@ -99,68 +155,12 @@ public class Driver {
         return numErrorRecords;
     }
 
-    public static void main(String[] args) {
-        try (Connection connection = DriverManager.getConnection("jdbc:ucanaccess://" + FILE_DATABASE)) {
-            File errorFile = new File(FILE_ERROR);
-            if (errorFile.exists())
-                try (FileWriter fw = new FileWriter(errorFile)) {} // Clear error file if it exists.
-
-            ArrayList<File> processedFiles = new ArrayList<>();
-            int numErrorRecords = 0;
-
-            File custUpdateFile = new File(FILE_CUST);
-            if (custUpdateFile.exists()) {
-                numErrorRecords += processCustUpdates(connection, custUpdateFile, errorFile);
-                processedFiles.add(custUpdateFile);
-            }
-
-            File emplUpdateFile = new File(FILE_EMPL);
-            if (emplUpdateFile.exists()) {
-                numErrorRecords += processEmplUpdates(connection, emplUpdateFile, errorFile);
-                processedFiles.add(emplUpdateFile);
-            }
-
-            PreparedStatement pstmSelectEmpl = connection.prepareStatement("SELECT * FROM Employees WHERE Empl_ID=?");
-            PreparedStatement pstmSelectRegionFromState = connection.prepareStatement("SELECT Region FROM Regions WHERE State=?");
-            PreparedStatement pstmSelectCompanyFromId = connection.prepareStatement("SELECT * FROM Employees WHERE Empl_ID=?");
-            PreparedStatement pstmSelectCust = connection.prepareStatement("SELECT * FROM Customers WHERE Cust_ID=?");
-            PreparedStatement pstmSelectEmployeeFromCustId = connection.prepareStatement("SELECT Last_Name, First_Name FROM Employees WHERE (Primary_Cust_ID=? OR Secondary_Cust_ID=?)");
-            PreparedStatement pstmSelectRegions = connection.prepareStatement("SELECT * FROM Regions");
-            PreparedStatement pstmSelectRevenueRange = connection.prepareStatement("SELECT Low, High FROM Revenue_Groups WHERE Group=?");
-            int numEmployeeRecords = 0;
-            int selection;
-            do  {
-                switch (selection = getUserSelection()) {
-                case 1:
-                    displayEmployeeInfo(connection, pstmSelectEmpl, pstmSelectRegionFromState, pstmSelectCompanyFromId);
-                    break;
-                case 2:
-                    displayCustomerInfo(connection, pstmSelectCust, pstmSelectRevenueRange, pstmSelectEmployeeFromCustId);
-                    break;
-                case 3:
-                    displayRegions(connection);
-                    break;
-                case 4:
-                    generateEmployeeReport(connection);
-                    numEmployeeRecords++;
-                    break;
-                case 5:
-                    generateLog(processedFiles, numErrorRecords, numEmployeeRecords);
-                    break;
-                }
-                System.out.println();
-            } while (selection != 5);
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void displayEmployeeInfo(Connection connection, PreparedStatement pstmSelectEmpl, PreparedStatement pstmSelectRegionFromState, PreparedStatement pstmSelectCompanyFromId) throws SQLException, IOException {
-        String emplId = keyReader.readLine("Employee ID: ");
+    private static void displayEmployeeInfo(PreparedStatement pstmSelectEmpl, PreparedStatement pstmSelectRegionFromState, PreparedStatement pstmSelectCompanyFromId) throws SQLException, IOException {
+        String emplId = keyReader.readLine("Employee ID: ", false);
         pstmSelectEmpl.setString(1, emplId);
         ResultSet results = pstmSelectEmpl.executeQuery();
         if (results.next()) {
-            System.out.printf("First Name: %s, Last Name: %s, Region: %s, Primary Customer Name: %s, Has Secondary Customer: %s\n",
+            System.out.printf("[First Name]: %s [Last Name]: %s [Region]: %s [Primary Customer Name]: %s [Has Secondary Customer]: %s\n",
                     results.getString("First_Name"),
                     results.getString("Last_Name"),
                     getRegionFromState(results.getString("State_Represented"), pstmSelectRegionFromState),
@@ -184,16 +184,16 @@ public class Driver {
         return results.next() ? results.getString("Company") : "n/a";
     }
 
-    private static void displayCustomerInfo(Connection connection, PreparedStatement pstmSelectCust, PreparedStatement pstmSelectRevenueRange, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException, IOException {
-        String custId = keyReader.readLine("Customer ID: ");
+    private static void displayCustomerInfo(PreparedStatement pstmSelectCust, PreparedStatement pstmSelectRevenueRange, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException, IOException {
+        String custId = keyReader.readLine("Customer ID: ", false);
         pstmSelectCust.setString(1, custId);
         ResultSet results = pstmSelectCust.executeQuery();
         if (results.next()) {
-            System.out.printf("Company Name: %s, Revenue range: %s, Years: %s, Associated Employee: %s\n",
+            System.out.printf("[Company Name]: %s [Revenue range]: %s [Years]: %s [Associated Employees]: %s\n",
                     results.getString("Company"),
                     getRevenueRangeStr(results.getString("Revenue_Group"), pstmSelectRevenueRange),
                     results.getString("Years"),
-                    getAssociatedEmployee(custId, pstmSelectEmployeeFromCustId)
+                    getAssociatedEmployees(custId, pstmSelectEmployeeFromCustId)
                 );
         } else {
             System.out.println("No customer associated with ID: " + custId);
@@ -214,19 +214,71 @@ public class Driver {
         return "n/a";
     }
 
-    private static String getAssociatedEmployee(String custId, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException {
+    private static String getAssociatedEmployees(String custId, PreparedStatement pstmSelectEmployeeFromCustId) throws SQLException {
         pstmSelectEmployeeFromCustId.setString(1, custId);
         pstmSelectEmployeeFromCustId.setString(2, custId);
         ResultSet results = pstmSelectEmployeeFromCustId.executeQuery();
-        return results.next() ? results.getString("First_Name") + " " + results.getString("Last_Name") : "n/a";
+        StringBuilder sb = new StringBuilder();
+        while (results.next()) {
+            sb.append(results.getString("First_Name"));
+            sb.append(" ");
+            sb.append(results.getString("Last_Name"));
+            sb.append(", ");
+        }
+        return sb.length() == 0 ? "n/a" : sb.substring(0, sb.length() - 2);
     }
 
-    private static void displayRegions(Connection connection) {
-
+    private static void displayRegions(Statement statement) throws SQLException {
+        String sql = "SELECT Regions.Region, Regions.State, Employees.First_Name, Employees.Last_Name FROM Regions LEFT JOIN Employees ON Regions.State = Employees.State_Represented ORDER BY Regions.Region, Regions.State";
+        ResultSet results = statement.executeQuery(sql);
+        System.out.printf("%-12s  %-5s  %-10s  %s\n", "Region", "State", "First Name", "Last Name");
+        System.out.println("----------------------------------------------");
+        while (results.next()) {
+            System.out.printf("%-12s  %-5s  %-10s  %s\n",
+                results.getString(1) == null ? "-" : results.getString(1),
+                results.getString(2) == null ? "-" : results.getString(2),
+                results.getString(3) == null ? "-" : results.getString(3),
+                results.getString(4) == null ? "-" : results.getString(4)
+            );
+        }
     }
 
-    private static void generateEmployeeReport(Connection connection) {
+    private static void generateEmployeeReport(Statement statement) throws IOException, SQLException {
+        String sql = "SELECT Employees.Last_Name, Employees.First_Name, Employees.Years_Service, Regions.Region, c1.Company as Primary_Company, r1.Low AS Primary_Company_Revenue_Low, r1.High AS Primary_Company_Revenue_High, c2.Company as Secondary_Company, r2.Low AS Secondary_Company_Revenue_Low, r2.High AS Secondary_Company_Revenue_High FROM ((((Employees LEFT JOIN Customers c1 ON Employees.Primary_Cust_ID = c1.Cust_ID) LEFT JOIN Customers c2 ON Employees.Secondary_Cust_ID = c2.Cust_ID) LEFT JOIN Revenue_Groups r1 ON c1.Revenue_Group = r1.Group) LEFT JOIN Revenue_Groups r2 ON c2.Revenue_Group = r2.Group) LEFT JOIN Regions ON Employees.State_Represented = Regions.State ORDER BY Employees.Last_Name, Employees.First_Name";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("employee_report.txt"))) {
+            bw.write(String.format("Employee report [%s]", new Date().toString()));
+            bw.newLine();
+            bw.newLine();
+            bw.write(String.format("%-11s  %-10s  %-5s  %-12s  %-30s  %-17s  %-30s  %-17s  %s", "Last Name", "First Name", "Years", "Region", "Primary Customer", "P.C. Revenue High", "Secondary Customer", "S.C. Revenue High", "Compensation modifier"));
+            bw.newLine();
+            bw.write("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            bw.newLine();
+            ResultSet results = statement.executeQuery(sql);
+            while (results.next()) {
+                bw.write(String.format("%-11s  %-10s  %-5s  %-12s  %-30s  %-17s  %-30s  %-17s  %.2f",
+                            results.getString(1),
+                            results.getString(2),
+                            results.getString(3),
+                            results.getString(4),
+                            results.getString(5),
+                            String.format("$%s", results.getString(7).equals("0") ? "1000000+" : results.getString(7)),
+                            results.getString(8) == null ? "none" : results.getString(8),
+                            results.getString(8) == null ? "none" : String.format("$%s", results.getString(10).equals("0") ? "1000000+" : results.getString(10)),
+                            calculateCompensationModifier(results.getInt(6), results.getInt(9), results.getInt(3), results.getString(4))
+                        )
+                );
+                bw.newLine();
+            }
+        }
+    }
 
+    private static double calculateCompensationModifier(int primaryLow, int secondaryLow, int yos, String region) {
+        double total = 0.005 * primaryLow + 0.0015 * secondaryLow;
+        if (yos > 8)
+            total += yos / 20.0;
+        if (region.equals("Northeast"))
+            total -= 500;
+        return total < 0 ? 0 : total;
     }
 
     private static void generateLog(ArrayList<File> processedFiles, int numErrorRecords, int numEmployeeRecords) throws IOException {
@@ -234,6 +286,7 @@ public class Driver {
             bw.write("Processed Files:");
             bw.newLine();
             for (File f : processedFiles) {
+                bw.write("  ");
                 bw.write(f.getName());
                 bw.newLine();
             }
